@@ -20,11 +20,15 @@ def game_ui():
     try:
         a = int(a);
     except:
+        print("wrong input")
+    finally:
         a = 0
     b = input("And:")
     try:
         b = int(b);
     except:
+        print("wrong input")
+    finally:
         b = 100
     secret = get_seed(a, b)
     while QA_user(secret) is not True:
