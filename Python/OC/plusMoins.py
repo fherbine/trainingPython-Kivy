@@ -16,12 +16,16 @@ def QA_user(secret):
 
 def game_ui():
     print("Welcome to plus Less or more Game !")
-    a = input("The secret number will be between (leave blank: def 0-100):")
-    if a in locals():
+    a = input("The secret number will be between :")
+    try:
         a = int(a);
+    except:
+        a = 0
     b = input("And:")
-    if b in locals():
+    try:
         b = int(b);
+    except:
+        b = 100
     secret = get_seed(a, b)
     while QA_user(secret) is not True:
         pass
