@@ -1,0 +1,29 @@
+<NewButton@Button>:
+	color: .33, .33, .33, 1
+	font_size:32
+	size: 60, 30
+	background_normal: ''
+	background_down: ''
+	background_color: .88, .88, .88, 1
+	size_hint: .4, .3 # percentage of the window
+
+<FloatLayout>:
+	NewButton:
+		text: "tutu"
+		pos_hint: {"x": 0, "top": 1}
+
+	NewButton:
+		text: "tata"
+		pos_hint: {"right": 1, "y": 0}
+
+	NewButton:
+		text: "toto"
+		pos_hint: {"right": 1, "top": 1}
+
+	NewButton:
+		text: "titi"
+		pos_hint: {"left": 1, "bottom": 0}
+
+	NewButton:
+		text: "tyty"
+		pos_hint: {"center_x": .5, "center_y": .5}
