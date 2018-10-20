@@ -1,0 +1,16 @@
+<HWCeptionGridLayout>:
+	cols: 1
+	rows: 2
+	padding: 10
+	spacing: 10
+	BoxLayout:
+		TextInput:
+			id: typing
+			background_color: 1, 1, 1, 1
+			color: 0, 0, 0, 1
+			mutiline: False
+
+	BoxLayout:
+		Button:
+			text: "hello world ! "
+			on_press: typing.text += self.text
