@@ -1,0 +1,26 @@
+<MyBut@Button>:
+	font_size: 30
+
+<GridTodo>:
+	id: todolist
+	display: container
+	rows: 2
+	BoxLayout:
+		padding: 10
+		spacing: 10
+		orientation: "vertical"
+		id: container
+	
+	BoxLayout:
+		size_hint_y: .3
+		TextInput:
+			id: newTask
+		GridLayout:
+			size_hint_x: .3
+			rows: 2
+			MyBut:
+				text: "send"
+				on_press: todolist.add(newTask.text)
+			MyBut:
+				text: "reset"
+				on_press: newTask.text = ""
