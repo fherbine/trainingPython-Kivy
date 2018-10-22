@@ -1,0 +1,54 @@
+#: import main userappli
+## import the python file
+#: import ListAdapter kivy.adapters.listadapter.ListAdapter
+## import the list adapter. See \
+## https://kivy.org/doc/stable/api-kivy.adapters.listadapter.html?highlight=adapter#module-kivy.adapters.listadapter 
+#: import ListItemButton kivy.uix.listview.ListItemButton
+
+BoxUserDB:
+## access root => Python File
+
+<BoxUserDB>:
+	orientation: "vertical"
+	user_first_name: fname
+	user_last_name: lname
+	user_list: ulist
+	padding: 10
+	spacing: 10
+	
+	BoxLayout:
+		orientation: "horizontal"
+		size_hint_y: None
+		height: "40dp"
+
+		Label:
+			text: "First name: "
+		TextInput:
+			id: fname
+
+		Label:
+			text: "Last name: "
+		TextInput:
+			id: lname
+
+	BoxLayout:
+		orientation: "horizontal"
+		size_hint_y: None
+		height: "40dp"
+
+		Button:
+			text: "Add"
+			on_press: root.new_user()
+
+		Button:
+			text: "Delete"
+			on_press: root.delete_user()
+
+		Button:
+			text: "Replace"
+			on_press: root.replace_user()
+
+	ListView:
+		id: ulist
+		adapter:
+			ListAdapter(data=["Felix Herbinet"], cls=main.UsersList)
