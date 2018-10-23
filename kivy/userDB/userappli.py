@@ -15,10 +15,11 @@ class UsersList(ListItemButton):
 class BoxUserDB(BoxLayout):
     user_first_name = ObjectProperty()
     user_last_name = ObjectProperty()
+    user_age = ObjectProperty()
     user_list = ObjectProperty()
 
     def new_user(self):
-        user = self.user_first_name.text + " " + self.user_last_name.text
+        user = self.user_first_name.text + " " + self.user_last_name.text + " " + str(int(self.user_age.value))
         self.user_list.adapter.data.append(user)
         self.user_list._trigger_reset_populate() # resetting user list to refresh it
 
@@ -33,7 +34,7 @@ class BoxUserDB(BoxLayout):
         selected_user = self.user_list.adapter.selection
         if selected_user:
             selected_user = selected_user[0].text
-            user = self.user_first_name.text + " " + self.user_last_name.text
+            user = self.user_first_name.text + " " + self.user_last_name.text + " " +str(int(self.user_age.value))
             idx = self.user_list.adapter.data.index(selected_user)
             self.user_list.adapter.data[idx] = user
             self.user_list._trigger_reset_populate()

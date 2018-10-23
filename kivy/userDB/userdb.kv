@@ -13,6 +13,7 @@ BoxUserDB:
 	user_first_name: fname
 	user_last_name: lname
 	user_list: ulist
+	user_age: uage
 	padding: 10
 	spacing: 10
 	
@@ -30,6 +31,18 @@ BoxUserDB:
 			text: "Last name: "
 		TextInput:
 			id: lname
+
+	BoxLayout:	
+		Label:
+			text: "Age: "
+		Slider:
+			min: 0
+			max: 100
+			id: uage
+			on_touch_move: selected_num.text = str(int(self.value))
+		Label:
+			text: "0"
+			id: selected_num
 
 	BoxLayout:
 		orientation: "horizontal"
@@ -51,4 +64,4 @@ BoxUserDB:
 	ListView:
 		id: ulist
 		adapter:
-			ListAdapter(data=["Felix Herbinet"], cls=main.UsersList)
+			ListAdapter(data=["Felix Herbinet 19"], cls=main.UsersList)
