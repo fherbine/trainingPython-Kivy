@@ -18,13 +18,25 @@ class BoxUserDB(BoxLayout):
     user_list = ObjectProperty()
 
     def new_user(self):
-        pass
+        user = self.user_first_name.text + " " + self.user_last_name.text
+        self.user_list.adapter.data.append(user)
+        self.user_list._trigger_reset_populate() # resetting user list to refresh it
 
     def delete_user(self):
-        pass
+        selected_user = self.user_list.adapter.selection
+        if selected_user:
+            selected_user = selected_user[0].text
+            self.user_list.adapter.data.remove(selected_user)
+            self.user_list._trigger_reset_populate()
 
     def replace_user(self):
-        pass
+        selected_user = self.user_list.adapter.selection
+        if selected_user:
+            selected_user = selected_user[0].text
+            user = self.user_first_name.text + " " + self.user_last_name.text
+            idx = self.user_list.adapter.data.index(selected_user)
+            self.user_list.adapter.data[idx] = user
+            self.user_list._trigger_reset_populate()
 
 class UserDBApp(App):
     def build(self):
