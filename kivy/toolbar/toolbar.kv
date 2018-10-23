@@ -1,0 +1,34 @@
+<GridToolbar>:
+	rows: 2
+	
+	BoxLayout:
+		id: desktop
+	BoxLayout:
+		size_hint_y: None
+		height: 30
+		spacing: 5
+
+		canvas:
+			Color:
+				rgba: 1, 1, 1, 1
+			Rectangle:
+				pos: self.pos
+				size: self.size
+
+		Button:
+			background_normal: 'lub.png'
+			background_down: 'lub_dn.png'
+			size_hint_x: None
+			width: 56
+		
+		Button:
+			background_normal: 'fox.png'
+			background_down: 'fox_dn.png'
+			size_hint_x: None
+			width: 30
+		
+		Button:
+			background_normal: 'set.png'
+			background_down: 'set_dn.png'
+			size_hint_x: None
+			width: 30
