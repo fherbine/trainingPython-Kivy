@@ -1,0 +1,29 @@
+uix ==> module that hold UI stuffs
+
+
+root Widget ==> must be called in py file and between <> in kv file
+
+
+reminders python:
+
+	super(DaughterClass, self).method(**kwargs) ==> implement the functionality\
+												of the original class (mother)
+
+reminders widgets:
+
+BoxLayout:
+	orientation: ['vertical'(def.) / 'horizontal']
+GridLayout:
+	cols, rows
+TextInput:
+	multiline: [False / True], text
+Label:
+	text
+Button:
+	text, 
+	on_press
+Slider:
+	orientation: [(Same as Box Layout)], min, max, value, step
+Scatter:
+
+on_touch_down ==> more information needed
