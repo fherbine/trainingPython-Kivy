@@ -1,0 +1,38 @@
+BoxLayout:
+    canvas.after:
+        Color:
+        Line:
+            points:
+                (
+                self.x, self.y + self.height / 3,
+                self.right, self.y + self.height / 3,
+                )
+        Color:
+        Line:
+            points:
+                (
+                self.x, self.y + self.height / 3 * 2,
+                self.right, self.y + self.height / 3 * 2,
+                )
+    MySV:
+
+<MySV>:
+    container: container
+    do_scroll_x: False
+    bar_width: 0
+
+    MainGrid:
+        id: container
+
+<MainGrid>:
+    cols: 1
+    size_hint_y: None
+
+<SelectionLabel>:
+    canvas.before:
+        Color:
+            rgba: 1, 0, 0, 1
+        Line:
+            points: self.x, self.y, self.right, self.y, self.right, self.top, self.x, self.top, self.x, self.y
+    size_hint_y: None
+    text: ''

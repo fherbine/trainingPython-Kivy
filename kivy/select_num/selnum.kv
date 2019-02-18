@@ -1,0 +1,59 @@
+FloatLayout:
+
+    BoxLayout:
+        pos_hint: {'center_y': .5}
+        size_hint_y: None
+        height: dp(100)
+
+        canvas.before:
+            Color: 
+                rgba: 1, 0, 0, 1
+            Line:
+                points:
+                    (
+                    self.x, self.y,
+                    self.right, self.y,
+                    self.right, self.top,
+                    self.x, self.top,
+                    self.x, self.y,
+                    )
+                width: 1
+        LabelButton:
+            text: 'toto'
+            on_press: print('toto')
+
+        NumSelectView:
+            limit_min: 0
+            limit_max: 60
+
+<NumSelectView>:
+    selection: ''
+    viewclass: 'SelectableLabel'
+    limit_min: 0
+    limit_max: 0
+
+    SelectableRecycleBoxLayout:
+        default_size: None, self.parent.height / 3 if self.parent else 0
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+        multiselect: True
+        touch_multiselect: True
+
+
+<LabelButton@ButtonBehavior+Label>:
+
+
+<SelectableLabel>:
+    size_hint_y: None
+    height: dp(15)
+    font_size: dp(15)
+    color: 1, 0, 0, 1
+    # Draw a background to indicate selection
+    canvas.before:
+        Color:
+            rgba: (.0, 0.9, .1, .3) if self.selected else (0, 0, 0, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size

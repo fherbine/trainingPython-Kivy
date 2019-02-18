@@ -1,0 +1,30 @@
+MainBox:
+    canvas.before:
+        Color:
+            rgba: .7, .7, .7, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Label:
+        text: 'toto'
+        color: rgba('#000000')
+
+    Button:
+        text: 'tata'
+        color: rgba('#000000')
+        on_press: app.open_popup()
+
+
+<MyMV>:
+    size_hint: .9, .9
+
+<BoxContainer>:
+    canvas.before:
+        Color:
+            rgba: rgba('#000000')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Label:
+        text: 'toto'

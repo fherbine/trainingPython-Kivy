@@ -1,0 +1,79 @@
+SelectBox:
+    hms_duration: {'h': self.duration // 3600, 'm': self.duration // 60 % 60, 's': self.duration % 60}
+    duration: 0
+
+    canvas.before:
+        Color:
+            rgba: rgba('#22223a')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    canvas.after:
+        Color:
+            rgba: rgba('#777788')
+        Line:
+            points:
+                (
+                self.x, self.center_y - self.height / 5.5 / 2,
+                self.right, self.center_y - self.height / 5.5 / 2,
+                )
+        Color:
+            rgba: rgba('#777788')
+        Line:
+            points:
+                (
+                self.x, self.center_y + self.height / 5.5 / 2,
+                self.right, self.center_y + self.height / 5.5 / 2,
+                )
+
+    SelectCyclicRoulette:
+        id: hours
+        density: 5.5
+        zero_indexed: True
+        selected_value: root.hms_duration['h']
+        cycle: 1000
+        size_hint_x: 1
+        on_selected_value: 
+            root.hms_duration['h'] = self.selected_value
+            root.recalculate_duration()
+
+    Label:
+        text: 'hours'
+        size_hint_x: None
+        text_size: hours.width, None
+        size: self.texture_size
+
+    SelectCyclicRoulette:
+        id: minutes
+        density: 5.5
+        cycle: 60
+        zero_indexed: True
+        selected_value: root.hms_duration['m']
+        size_hint_x: 1
+        on_selected_value:
+            root.hms_duration['m'] = self.selected_value
+            root.recalculate_duration()
+
+    Label:
+        text: 'minutes'
+        size_hint_x: None
+        text_size: minutes.width, None
+        size: self.texture_size
+
+    SelectCyclicRoulette:
+        id: seconds
+        density: 5.5
+        cycle: 60
+        zero_indexed: True
+        selected_value: root.hms_duration['s']
+        size_hint_x: 1
+        on_selected_value:
+            root.hms_duration['s'] = self.selected_value
+            root.recalculate_duration()
+
+    Label:
+        text: 'seconds'
+        size_hint_x: None
+        text_size: seconds.width, None
+        size: self.texture_size
