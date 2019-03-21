@@ -38,6 +38,7 @@ class ZDict():
 
         if self._dict_content == cmp_obj._dict_content:
             return True
+        return False
 
 
 def test_dict_str_print():
@@ -88,3 +89,6 @@ def test_diff_type_eq():
 
 def test_basic_eq():
     assert (ZDict(k='v') == ZDict(k='v')) == (dict(k='v') == dict(k='v'))
+
+def test_basic_non_eq():
+    assert (ZDict(k='v') == ZDict(k='fh')) == (dict(k='v') == dict(k='fh'))
