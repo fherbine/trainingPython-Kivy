@@ -22,6 +22,13 @@ class ZDict():
 
         self._dict_content[index] = value
 
+    def __contains__(self, obj):
+        """ useful for the `in` keyword """
+        for item in self._dict_content:
+            if obj is item:
+                return True
+            return False
+
 
 def test_dict_str_print():
     assert print(dict()) == print(ZDict())
@@ -44,3 +51,9 @@ def test_add_several_item_getkey_convert_str():
     a = dict(key='val', v2=0, v3=False)
     b = ZDict(key='val', v2=0, v3=False)
     assert str(a['key'] + str(a['v3'])) == str(b['key'] + str(b['v3']))
+
+
+def test_in_keyword_basic():
+    a = dict(key='val')
+    b = ZDict(key='val')
+    assert ('key' in a) == ('key' in b)
