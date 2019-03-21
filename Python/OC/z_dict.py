@@ -27,3 +27,6 @@ def test_dict_repr_print():
 
 def test_dict_one_elem_at_init_str():
     assert str(dict(key='value')) == str(ZDict(key='value'))
+
+def test_dict_several_elems_at_init_str():
+    assert str(dict(key='value', key2='v2')) == str(ZDict(key='value', key2='v2'))
