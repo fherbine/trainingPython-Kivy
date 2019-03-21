@@ -32,6 +32,10 @@ class ZDict():
     def __len__(self):
         return len(self._dict_content)
 
+    def __eq__(self, cmp_obj):
+        if type(cmp_obj) != ZDict:
+            return False
+
 
 def test_dict_str_print():
     assert print(dict()) == print(ZDict())
@@ -75,3 +79,6 @@ def test_len_0():
     a = dict(a=3, b=False)
     b = ZDict(a=3, b=False)
     assert len(a) == len(b)
+
+def test_diff_type_eq():
+    assert (ZDict() == str()) == (dict() == str())
