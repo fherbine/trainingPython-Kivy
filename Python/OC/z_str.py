@@ -11,11 +11,11 @@ class ZStr():
     def __getitem__(self, index):
         return self._str_base[index]
 
-    def __contains__(self, char):
-        if char is '':
+    def __contains__(self, chars):
+        if chars is '':
             return True
-        for c in self._str_base:
-            if c is char:
+        for i in range(len(self._str_base)):
+            if chars == self._str_base[i:len(chars) + i]:
                 return True
         return False
 
@@ -43,3 +43,6 @@ def test_no_char_in_str():
 
 def test_one_char_in_str():
     assert ('o' in str('toto')) == ('o' in ZStr('toto'))
+
+def test_2_chars_in_str():
+    assert ('to' in str('toto')) == ('to' in ZStr('toto'))
