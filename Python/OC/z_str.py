@@ -55,3 +55,6 @@ def test_str_chars_in_str():
 
 def test_chars_not_in_str():
     assert ('tota' in str('toto')) == ('tota' in ZStr('toto'))
+
+def test_str_longer_in_str():
+    assert ('totoo' in str('toto')) == ('totoo' in ZStr('toto'))
