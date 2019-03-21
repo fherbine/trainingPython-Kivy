@@ -70,3 +70,8 @@ def test_len_0():
     a = dict()
     b = ZDict()
     assert len(a) == len(b)
+
+def test_len_0():
+    a = dict(a=3, b=False)
+    b = ZDict(a=3, b=False)
+    assert len(a) == len(b)
