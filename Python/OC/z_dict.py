@@ -2,7 +2,7 @@ class ZDict():
     """ A sort of dict() """
 
     def __init__(self, **kwargs):
-        self._dict_content = {}
+        self._dict_content = kwargs
 
     def _get_dict_content(self):
         return self._dict_content
@@ -24,3 +24,6 @@ def test_dict_str_print():
 
 def test_dict_repr_print():
     assert print(repr(dict())) == print(repr(ZDict()))
+
+def test_dict_one_elem_at_init_str():
+    assert str(dict(key='value')) == str(ZDict(key='value'))
