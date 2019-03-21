@@ -32,3 +32,6 @@ def test_str_index_char():
 
 def test_no_char_in_empty_str():
     assert ('' in str()) == ('' in ZStr())
+
+def test_no_char_in_str():
+    assert ('' in str('toto')) == ('' in ZStr('toto'))
