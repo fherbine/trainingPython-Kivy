@@ -8,6 +8,9 @@ class ZStr():
     def __str__(self):
         return self._str_base
 
+    def __getitem__(self, index):
+        return self._str_base[index]
+
 
 def test_basic_repr():
     assert repr(str()) == repr(ZStr())
@@ -20,3 +23,6 @@ def test_basic_str():
 
 def test_str_str():
     assert str(str('toto')) == str(ZStr('toto'))
+
+def test_str_index_char():
+    assert str('pato')[2] == ZStr('pato')[2]
