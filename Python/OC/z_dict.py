@@ -36,6 +36,9 @@ class ZDict():
         if type(cmp_obj) != ZDict:
             return False
 
+        if self._dict_content == cmp_obj._dict_content:
+            return True
+
 
 def test_dict_str_print():
     assert print(dict()) == print(ZDict())
@@ -82,3 +85,6 @@ def test_len_0():
 
 def test_diff_type_eq():
     assert (ZDict() == str()) == (dict() == str())
+
+def test_basic_eq():
+    assert (ZDict(k='v') == ZDict(k='v')) == (dict(k='v') == dict(k='v'))
