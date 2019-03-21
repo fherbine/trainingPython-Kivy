@@ -39,3 +39,8 @@ def test_add_one_item_getkey_convert_str():
     a = dict(key='val')
     b = ZDict(key='val')
     assert a['key'] == b['key']
+
+def test_add_several_item_getkey_convert_str():
+    a = dict(key='val', v2=0, v3=False)
+    b = ZDict(key='val', v2=0, v3=False)
+    assert str(a['key'] + str(a['v3'])) == str(b['key'] + str(b['v3']))
