@@ -98,3 +98,6 @@ def test_basic_non_eq():
 
 def test_diff_type_ne():
     assert (ZDict() != str()) == (dict() != str())
+
+def test_basic_ne():
+    assert (ZDict(k='v') != ZDict(k='v')) == (dict(k='v') != dict(k='v'))
