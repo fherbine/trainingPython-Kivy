@@ -14,6 +14,11 @@ class ZStr():
     def __contains__(self, char):
         if char is '':
             return True
+        for c in self._str_base:
+            if c is char:
+                return True
+        return False
+
 
 def test_basic_repr():
     assert repr(str()) == repr(ZStr())
@@ -35,3 +40,6 @@ def test_no_char_in_empty_str():
 
 def test_no_char_in_str():
     assert ('' in str('toto')) == ('' in ZStr('toto'))
+
+def test_one_char_in_str():
+    assert ('o' in str('toto')) == ('o' in ZStr('toto'))
