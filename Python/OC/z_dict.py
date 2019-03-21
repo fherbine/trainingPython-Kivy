@@ -40,6 +40,9 @@ class ZDict():
             return True
         return False
 
+    def __ne__(self, cmp_obj):
+        return False if self.__eq__(cmp_obj) else True
+
 
 def test_dict_str_print():
     assert print(dict()) == print(ZDict())
@@ -92,3 +95,6 @@ def test_basic_eq():
 
 def test_basic_non_eq():
     assert (ZDict(k='v') == ZDict(k='fh')) == (dict(k='v') == dict(k='fh'))
+
+def test_diff_type_ne():
+    assert (ZDict() != str()) == (dict() != str())
