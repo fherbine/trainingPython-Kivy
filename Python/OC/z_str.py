@@ -11,6 +11,9 @@ class ZStr():
     def __getitem__(self, index):
         return self._str_base[index]
 
+    def __contains__(self, char):
+        if char is '':
+            return True
 
 def test_basic_repr():
     assert repr(str()) == repr(ZStr())
@@ -26,3 +29,6 @@ def test_str_str():
 
 def test_str_index_char():
     assert str('pato')[2] == ZStr('pato')[2]
+
+def test_no_char_in_empty_str():
+    assert ('' in str()) == ('' in ZStr())
