@@ -5,9 +5,15 @@ class ZStr():
     def __repr__(self):
         return '\'{}\''.format(self._str_base)
 
+    def __str__(self):
+        return ''
+
 
 def test_basic_repr():
     assert repr(str()) == repr(ZStr())
 
 def test_str_repr():
     assert repr(str('toto')) == repr(ZStr('toto'))
+
+def test_basic_str():
+    assert str(str()) == str(ZStr())
