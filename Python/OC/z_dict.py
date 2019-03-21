@@ -29,6 +29,9 @@ class ZDict():
                 return True
         return False
 
+    def __len__(self):
+        return len(self._dict_content)
+
 
 def test_dict_str_print():
     assert print(dict()) == print(ZDict())
@@ -63,3 +66,7 @@ def test_in_keyword_dual_basic():
     b = ZDict(key='val', k2=0)
     assert ('key' in a and 'k2' in a) == ('key' in b and 'k2' in b)
 
+def test_len_0():
+    a = dict()
+    b = ZDict()
+    assert len(a) == len(b)
