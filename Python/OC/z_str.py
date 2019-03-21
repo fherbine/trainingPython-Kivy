@@ -6,7 +6,7 @@ class ZStr():
         return '\'{}\''.format(self._str_base)
 
     def __str__(self):
-        return ''
+        return self._str_base
 
 
 def test_basic_repr():
@@ -17,3 +17,6 @@ def test_str_repr():
 
 def test_basic_str():
     assert str(str()) == str(ZStr())
+
+def test_str_str():
+    assert str(str('toto')) == str(ZStr('toto'))
