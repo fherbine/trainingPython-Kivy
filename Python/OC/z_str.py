@@ -49,3 +49,6 @@ def test_2_chars_in_str():
 
 def test_3_chars_in_str():
     assert ('tot' in str('toto')) == ('tot' in ZStr('toto'))
+
+def test_str_chars_in_str():
+    assert ('toto' in str('toto')) == ('toto' in ZStr('toto'))
