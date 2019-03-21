@@ -1,10 +1,22 @@
 class ZDict():
+    """ A sort of dict() """
+
+    def __init__(self, **kwargs):
+        self._dict_content = {}
+
+    def _get_dict_content(self):
+        return self._dict_content
+
+    def _set_dict_content(self, value):
+        self._dict_content = value
+
     def __repr__(self):
-        return '{}'
+        return str(self.dict_content)
 
     def __str__(self):
-        return '{}'
+        return str(self.dict_content)
 
+    dict_content = property(_get_dict_content, _set_dict_content)
 
 
 def test_dict_str_print():
