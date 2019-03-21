@@ -27,7 +27,7 @@ class ZDict():
         for item in self._dict_content:
             if obj is item:
                 return True
-            return False
+        return False
 
 
 def test_dict_str_print():
@@ -57,3 +57,9 @@ def test_in_keyword_basic():
     a = dict(key='val')
     b = ZDict(key='val')
     assert ('key' in a) == ('key' in b)
+
+def test_in_keyword_dual_basic():
+    a = dict(key='val', k2=0)
+    b = ZDict(key='val', k2=0)
+    assert ('key' in a and 'k2' in a) == ('key' in b and 'k2' in b)
+
