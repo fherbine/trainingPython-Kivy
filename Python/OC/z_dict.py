@@ -101,3 +101,6 @@ def test_diff_type_ne():
 
 def test_basic_ne():
     assert (ZDict(k='v') != ZDict(k='v')) == (dict(k='v') != dict(k='v'))
+
+def test_basic_non_ne():
+    assert (ZDict(k='v') != ZDict(k='fh')) == (dict(k='v') != dict(k='fh'))
