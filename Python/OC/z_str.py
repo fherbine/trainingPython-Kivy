@@ -27,6 +27,11 @@ class ZStr():
             return
         return ZStr(self._str_base + str(obj))
 
+    def __mul__(self, obj):
+        if type(obj) != int:
+            return
+        return self._str_base * obj
+
 
 def test_basic_repr():
     assert repr(str()) == repr(ZStr())
@@ -72,3 +77,6 @@ def test_len_str():
 
 def test_str_add_str():
     assert str('to' + 'to') == str(ZStr('to') + ZStr('to'))
+
+def test_str_mul_int():
+    assert str('to' * 2) == str(ZStr('to') * 2)
