@@ -22,6 +22,11 @@ class ZStr():
     def __len__(self):
         return len(self._str_base)
 
+    def __add__(self, obj):
+        if type(obj) != str and type(obj) != type(self):
+            return
+        return ZStr(self._str_base + str(obj))
+
 
 def test_basic_repr():
     assert repr(str()) == repr(ZStr())
@@ -64,3 +69,6 @@ def test_str_longer_in_str():
 
 def test_len_str():
     assert len('toto')== len(ZStr('toto'))
+
+def test_str_add_str():
+    assert str('to' + 'to') == str(ZStr('to') + ZStr('to'))
