@@ -19,6 +19,9 @@ class ZStr():
                 return True
         return False
 
+    def __len__(self):
+        return len(self._str_base)
+
 
 def test_basic_repr():
     assert repr(str()) == repr(ZStr())
@@ -58,3 +61,6 @@ def test_chars_not_in_str():
 
 def test_str_longer_in_str():
     assert ('totoo' in str('toto')) == ('totoo' in ZStr('toto'))
+
+def test_len_str():
+    assert len('toto')== len(ZStr('toto'))
