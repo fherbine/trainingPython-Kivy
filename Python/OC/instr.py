@@ -30,6 +30,12 @@ class InStr():
     def __getitem__(self, index):
         return self._base_str[index]
 
+    def __len__(self):
+        idx = 0
+        for idx, _ in enumerate(self._base_str):
+            pass
+        return idx + 1 if idx != 0 else 0
+
 
 def test_basic_repr():
     assert repr(str()) == repr(InStr())
@@ -76,6 +82,11 @@ def test_empty_add():
 def test_add():
     assert repr(str('v') + str('v')) == repr(InStr('v') + InStr('v'))
 
+def test_empty_len():
+    assert len(str()) == len(InStr())
+
+def test_len():
+    assert len(str('azer')) == len(InStr('azer'))
 
 if __name__ == '__main__':
     pass
