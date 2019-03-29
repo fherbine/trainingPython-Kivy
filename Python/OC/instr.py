@@ -2,27 +2,30 @@ class InStr():
     """ InStr: just an infinite str """
 
     def __init__(self, base_string=''):
-        self.base_str = base_string
+        self._base_str = base_string
 
     def __repr__(self):
-        return "'{}'".format(self.base_str)
+        return "'{}'".format(self._base_str)
 
     def __str__(self):
-        return '{}'.format(self.base_str)
+        return '{}'.format(self._base_str)
 
     def __eq__(self, obj_cmp):
         if type(obj_cmp) != self.__class__:
             return False
-        if self.base_str == obj_cmp.base_str:
+        if self._base_str == obj_cmp._base_str:
             return True
         return False
 
     def __ne__(self, obj_cmp):
         if type(obj_cmp) != self.__class__:
             return True
-        if self.base_str == obj_cmp.base_str:
+        if self._base_str == obj_cmp._base_str:
             return False
         return True
+
+    def __getitem__(self, index):
+        return self._base_str[index]
 
 
 def test_basic_repr():
@@ -60,6 +63,9 @@ def test_ne_empty():
 
 def test_non_ne_empty():
     assert bool(str() != str()) == bool(InStr() != InStr())
+
+def test_empty_get_item():
+    assert str('z')[-1] == InStr('z')[-1]
 
 
 if __name__ == '__main__':
