@@ -41,7 +41,6 @@ class InStr():
     def __getitem__(self, index):
         return self._base_str[index]
 
-
     def __len__(self):
         idx = 0
         for idx, _ in enumerate(self._base_str):
@@ -50,7 +49,6 @@ class InStr():
 
     def __iter__(self):
         return ItInStr(self)
-
 
 
 def test_basic_repr():
