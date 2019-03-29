@@ -17,6 +17,13 @@ class InStr():
             return True
         return False
 
+    def __ne__(self, obj_cmp):
+        if type(obj_cmp) != self.__class__:
+            return True
+        if self.base_str == obj_cmp.base_str:
+            return False
+        return True
+
 
 def test_basic_repr():
     assert repr(str()) == repr(InStr())
@@ -47,6 +54,13 @@ def test_eq_empty():
 
 def test_non_eq_empty():
     assert bool(str('v') == str()) == bool(InStr('v') == InStr())
+
+def test_ne_empty():
+    assert bool(str('v') != str()) == bool(InStr('v') != InStr())
+
+def test_non_ne_empty():
+    assert bool(str() != str()) == bool(InStr() != InStr())
+
 
 if __name__ == '__main__':
     pass
