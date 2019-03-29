@@ -24,6 +24,9 @@ class InStr():
             return False
         return True
 
+    def __add__(self, obj):
+        return self._base_str + obj._base_str
+
     def __getitem__(self, index):
         return self._base_str[index]
 
@@ -64,8 +67,14 @@ def test_ne_empty():
 def test_non_ne_empty():
     assert bool(str() != str()) == bool(InStr() != InStr())
 
-def test_empty_get_item():
+def test_get_item():
     assert str('z')[-1] == InStr('z')[-1]
+
+def test_empty_add():
+    assert repr(str() + str()) == repr(InStr() + InStr())
+
+def test_add():
+    assert repr(str('v') + str('v')) == repr(InStr('v') + InStr('v'))
 
 
 if __name__ == '__main__':
