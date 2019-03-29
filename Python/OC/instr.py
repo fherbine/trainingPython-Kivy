@@ -10,6 +10,13 @@ class InStr():
     def __str__(self):
         return '{}'.format(self.base_str)
 
+    def __eq__(self, obj_cmp):
+        if type(obj_cmp) != self.__class__:
+            return False
+        if self.base_str == obj_cmp.base_str:
+            return True
+        return False
+
 
 def test_basic_repr():
     assert repr(str()) == repr(InStr())
@@ -34,6 +41,12 @@ def test_str_list():
 
 def test_str_dict():
     assert str(str(dict())) == str(InStr(dict()))
+
+def test_eq_empty():
+    assert bool(str() == str()) == bool(InStr() == InStr())
+
+def test_non_eq_empty():
+    assert bool(str('v') == str()) == bool(InStr('v') == InStr())
 
 if __name__ == '__main__':
     pass
