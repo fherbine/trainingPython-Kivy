@@ -1,3 +1,14 @@
+class ItInStr():
+    def __init__(self, in_str):
+        self._base = in_str
+        self._current_pos = 0
+
+    def __next__(self):
+        if self._current_pos == len(self._base):
+            raise StopIteration
+        self._current_pos += 1
+        return self._base[self._current_pos - 1]
+
 class InStr():
     """ InStr: just an infinite str """
 
@@ -30,11 +41,16 @@ class InStr():
     def __getitem__(self, index):
         return self._base_str[index]
 
+
     def __len__(self):
         idx = 0
         for idx, _ in enumerate(self._base_str):
             pass
         return idx + 1 if idx != 0 else 0
+
+    def __iter__(self):
+        return ItInStr(self)
+
 
 
 def test_basic_repr():
@@ -87,6 +103,9 @@ def test_empty_len():
 
 def test_len():
     assert len(str('azer')) == len(InStr('azer'))
+
+def test_iter():
+    assert [c for c in str('fherbine')] == [c for c in InStr('fherbine')]
 
 if __name__ == '__main__':
     pass
