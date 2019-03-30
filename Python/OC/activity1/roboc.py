@@ -18,12 +18,12 @@ for nom_fichier in os.listdir("cartes"):
         nom_carte = nom_fichier[:-3].lower()
         with open(chemin, "r") as fichier:
             contenu = fichier.read()
-            # Création d'une carte, à compléter
+            cartes.append(Carte(nom_fichier, contenu))
 
 # On affiche les cartes existantes
 print("Labyrinthes existants :")
 for i, carte in enumerate(cartes):
-    print("  {} - {}".format(i + 1, carte.nom))
+    print("\t{} - {}.".format(i + 1, carte.nom))
 
 # Si il y a une partie sauvegardée, on l'affiche, à compléter
 
