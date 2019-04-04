@@ -23,7 +23,7 @@ class ElementCarte:
         return self._position
 
     @position.setter
-    def position(self, postion):
+    def position(self, position):
         """Setter de l'attribut position."""
 
         self._position = position
@@ -55,18 +55,21 @@ class ElementCarte:
         self_mothers_class = self.__class__.__bases__
         elem_mothers_class = elem_object.__class__.__bases__
 
-        if self.mothers_class == elem_mothers_class:
-            return (slef._collapsable and elem_object._collapsable)
+        if self_mothers_class == elem_mothers_class:
+            # on retourne True si les deux element sont
+            # collapsable (superposale) sinon False
+            return (self._collapsable and elem_object._collapsable)
 
         if (
             type(elem_object) == tuple or type(elem_object) == list
         ) and len(elem_object) == 2 and self._movable:
-            # On ajoute la position elem_object (tuple ou list) a la position
-            # de notre objet
-            self.position = [xy + dxy for xy, dxy in zip(
+            # On retourne la position elem_object (tuple ou list) plus la
+            # position de notre objet
+            return [xy + dxy for xy, dxy in zip(
                 self.position,
                 elem_object,
             )]
+        return False
 
     def __sub__(self, move):
         """La methode spoeciale sub permet juste de soustraire une position.
@@ -75,7 +78,7 @@ class ElementCarte:
         if (
             type(move) == list or type(move) == tuple
         ) and len(move) == 2 and self._movable:
-            self.position = [xy + dxy for xy, dxy in zip(self.position, move)]
+            return [xy + dxy for xy, dxy in zip(self.position, move)]
         else:
             raise TypeError(
                 'The first Element should be movable and the second element \
@@ -91,7 +94,7 @@ class Personnage(ElementCarte):
         """
 
         # fonction super() me permettant de faire appel a la methode init de
-        # la classe parente en controllant l'argument collapsable et position
+        # la classe parente en controllant l'argument movable et position
         super(Personnage, self).__init__(position, movable=True)
 
 
@@ -115,7 +118,7 @@ class Porte(ElementCarte):
         """
 
         # fonction super() me permettant de faire appel a la methode init de
-        # la classe parente en controllant l'argument collapsable et position
+        # la classe parente en controllant l'argument position
         super(Porte, self).__init__(position)
 
 
@@ -127,5 +130,5 @@ class Arrivee(ElementCarte):
         """
 
         # fonction super() me permettant de faire appel a la methode init de
-        # la classe parente en controllant l'argument collapsable et position
+        # la classe parente en controllant l'argument position
         super(Arrivee, self).__init__(position)

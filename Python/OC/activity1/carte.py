@@ -11,13 +11,16 @@ from element_carte import (
     Porte,
 )
 
+# On fait correspondre les caracteres ASCII contenus dans la map à des
+# objets de element_carte.py
 element = {'O': Mur, 'X': Personnage, '.': Porte, 'U': Arrivee, ' ': None}
 
 def creer_labyrinthe_depuis_chaine(chaine):
     """Cette fonction permet de transformer la chaine de caractère lue du
     fichier, en dict():
     de la façon suivante:
-        {'Personnage': obj, 'Mur': [...], 'Porte': [...], 'arrivee': obj}
+        {'Personnage': [obj], 'Mur': [...], 'Porte': [...], 'arrivee': [obj],
+        'dimensions': (x, y)}
     """
 
     lines = chaine.split('\n')
@@ -30,12 +33,11 @@ def creer_labyrinthe_depuis_chaine(chaine):
                 class_name = new_elem.__class__.__name__
 
                 if labyrinthe.get(class_name, False):
-                    if type(labyrinthe[class_name]) != list:
-                        labyrinthe[class_name] = [labyrinthe[class_name]]
                     labyrinthe[class_name].append(new_elem)
                 else:
-                    labyrinthe[class_name] = new_elem
+                    labyrinthe[class_name] = [new_elem]
 
+    labyrinthe['dimensions'] = (len(line), len(lines))
     return labyrinthe
 
 class Carte:
