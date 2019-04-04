@@ -2,7 +2,7 @@
 
 """Ce fichier permet de creer un bloc quelconque sur la map."""
 
-def ElementCarte:
+class ElementCarte:
     """ElementCarte est la classe parente permettant de définir n'importe quel
     objet sur la carte
     """
@@ -78,50 +78,54 @@ def ElementCarte:
             self.position = [xy + dxy for xy, dxy in zip(self.position, move)]
         else:
             raise TypeError(
-                'The first Element should be movable and the second element
+                'The first Element should be movable and the second element \
                 of the substitution should be either tuple or list'
             )
 
 
-def Personnage(ElementCarte):
+class Personnage(ElementCarte):
     """Personnage (user) héritant de Element Carte"""
 
-    def __init__(self, position)
-    """Constructeur de Personnage prenant en compte la position de ce dernier.
-    """
+    def __init__(self, position):
+        """Constructeur de Personnage prenant en compte la position de ce dernier.
+        """
+
         # fonction super() me permettant de faire appel a la methode init de
         # la classe parente en controllant l'argument collapsable et position
         super(Personnage, self).__init__(position, movable=True)
 
 
-def Mur(ElementCarte):
+class Mur(ElementCarte):
     """Mur héritant de Element Carte"""
 
-    def __init__(self, position)
-    """Constructeur de Mur prenant en compte la position de ce dernier.
-    """
+    def __init__(self, position):
+        """Constructeur de Mur prenant en compte la position de ce dernier.
+        """
+
         # fonction super() me permettant de faire appel a la methode init de
         # la classe parente en controllant l'argument collapsable et position
-        super(Personnage, self).__init__(position, collapsable=False)
+        super(Mur, self).__init__(position, collapsable=False)
 
 
-def Porte(ElementCarte):
+class Porte(ElementCarte):
     """Porte héritant de Element Carte"""
 
-    def __init__(self, position)
-    """Constructeur de Porte prenant en compte la position de ce dernier.
-    """
+    def __init__(self, position):
+        """Constructeur de Porte prenant en compte la position de ce dernier.
+        """
+
         # fonction super() me permettant de faire appel a la methode init de
         # la classe parente en controllant l'argument collapsable et position
-        super(Personnage, self).__init__(position)
+        super(Porte, self).__init__(position)
 
 
-def Arrivee(ElementCarte):
+class Arrivee(ElementCarte):
     """Porte héritant de Element Arrivee"""
 
-    def __init__(self, position)
-    """Constructeur de Arrivee prenant en compte la position de ce dernier.
-    """
+    def __init__(self, position):
+        """Constructeur de Arrivee prenant en compte la position de ce dernier.
+        """
+
         # fonction super() me permettant de faire appel a la methode init de
         # la classe parente en controllant l'argument collapsable et position
-        super(Personnage, self).__init__(position)
+        super(Arrivee, self).__init__(position)

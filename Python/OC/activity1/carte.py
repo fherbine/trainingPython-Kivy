@@ -4,8 +4,39 @@
 creer_labyrinthe_depuis_chaine(chaine) permettant de parser le fichier reçu"""
 
 
+from element_carte import (
+    Arrivee,
+    Mur,
+    Personnage,
+    Porte,
+)
+
+element = {'O': Mur, 'X': Personnage, '.': Porte, 'U': Arrivee, ' ': None}
+
 def creer_labyrinthe_depuis_chaine(chaine):
-    pass
+    """Cette fonction permet de transformer la chaine de caractère lue du
+    fichier, en dict():
+    de la façon suivante:
+        {'Personnage': obj, 'Mur': [...], 'Porte': [...], 'arrivee': obj}
+    """
+
+    lines = chaine.split('\n')
+    labyrinthe = dict()
+
+    for y, line in enumerate(lines):
+        for x, char in enumerate(line):
+            if char in element and callable(element[char]):
+                new_elem = element[char]((x, y))
+                class_name = new_elem.__class__.__name__
+
+                if labyrinthe.get(class_name, False):
+                    if type(labyrinthe[class_name]) != list:
+                        labyrinthe[class_name] = [labyrinthe[class_name]]
+                    labyrinthe[class_name].append(new_elem)
+                else:
+                    labyrinthe[class_name] = new_elem
+
+    return labyrinthe
 
 class Carte:
 
