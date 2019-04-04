@@ -45,6 +45,8 @@ def prompt(cmds=global_commands):
         except:
             prompt(cmds)
 
+print('\n')
+
 # on verifie le numéro du labyrinthe entrer
 try:
     selected_map = cartes[int(input(
@@ -53,11 +55,21 @@ try:
 except:
     raise Exception('invalid map or typing, exiting...')
 
+print('\n')
+
 labyrinthe = Labyrinthe(selected_map)
 labyrinthe.display_map()
 
 win = False
 
+def quit():
+    print('Bye bye ... :)')
+    labyrinthe.save()
+
 while not win:
     cmd, argint = prompt()
-    win = labyrinthe.move_player(cmd, argint)
+
+    if cmd == 'Q':
+        quit()
+    else:
+        win = labyrinthe.move_player(cmd, argint)

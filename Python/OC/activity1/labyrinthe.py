@@ -2,6 +2,8 @@
 
 """Ce module contient la classe Labyrinthe."""
 
+import os
+import datetime
 
 # dict() faisant correspondre les direction a des mouvement en tuples
 # de coordonnees cartesiennes & dict() faisant correspondres des noms de classes
@@ -21,11 +23,17 @@ class Labyrinthe:
             - player pointe vers l'objet Personnage de map_objects
             - win, un attribut permettant de connaitre le moment où l'on gagne
         """
+        if 'Arrivee' not in map_objects.labyrinthe or 'Personnage' not in map_objects.labyrinthe:
+            raise Exception('Pas de personnage ou d\'arrivée dans le labyrinthe\
+             séléctionné :(')
         self._map_dimensions = map_objects.labyrinthe['dimensions']
         del map_objects.labyrinthe['dimensions']
         self._map_objects = map_objects.labyrinthe
         self._player = self._map_objects['Personnage'][0]
         self._win = False
+        # on enregistre egalement le time stamp afin de differencier nos 
+        # sauvegardes.
+        self._timestamp = datetime.datetime.now()
 
     def _from_map_to_str(self):
         """Methode permettant la conversion de notre map en string."""
@@ -80,14 +88,30 @@ class Labyrinthe:
         return True
 
     def move_player(self, cmd, n_moves=1):
-        """Methode permettant de chainer les mouvements."""
+        """Methode permettant de chainer les mouvements.
+        Peut importe l'issue du déplacement on sauvegarde la partie"""
         for _ in range(n_moves):
             if not self._single_move_player(cmd):
+                self.save()
                 return False
 
             self.display_map()
 
             if self._win:
                 print('Felicitations ! Vous avez gagné !')
+                self.save()
                 return True
+        self.save()
         return False
+
+    def save(self):
+        """Cette methode nous permet d'effectuer une sauvegarde."""
+        formated_timestamp = self._timestamp.strftime('%d-%m-%Y %H:%M:%S')
+        filename = 'save {}.txt'.format(formated_timestamp)
+
+        path = os.path.join('cartes', filename)
+
+        # on ecrase la sauvegarde si une meme sauvegarde (meme partie) existe
+
+        with open(path, 'w+') as save_file:
+            save_file.write(self._from_map_to_str())
