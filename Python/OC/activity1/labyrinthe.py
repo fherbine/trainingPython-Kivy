@@ -3,7 +3,6 @@
 """Ce module contient la classe Labyrinthe."""
 
 import os
-import datetime
 
 # dict() faisant correspondre les direction a des mouvement en tuples
 # de coordonnees cartesiennes & dict() faisant correspondres des noms de classes
@@ -16,24 +15,23 @@ class Labyrinthe:
 
     """Classe représentant un labyrinthe."""
 
-    def __init__(self, map_objects):
+    def __init__(self, map_elem):
         """Constructeur de la classe Labyrinthe en prends en compte:
-            - map_objects, labyrinthe de l' objet Carte
-            - les dimensions de la map extraite de map_objects
+            - map_objects, labyrinthe de l' objet Carte (map_elem)
+            - map_name, le nom de la carte
+            - les dimensions de la map extraite de map_elem.labyrinthe
             - player pointe vers l'objet Personnage de map_objects
             - win, un attribut permettant de connaitre le moment où l'on gagne
         """
-        if 'Arrivee' not in map_objects.labyrinthe or 'Personnage' not in map_objects.labyrinthe:
+        if 'Arrivee' not in map_elem.labyrinthe or 'Personnage' not in map_elem.labyrinthe:
             raise Exception('Pas de personnage ou d\'arrivée dans le labyrinthe\
              séléctionné :(')
-        self._map_dimensions = map_objects.labyrinthe['dimensions']
-        del map_objects.labyrinthe['dimensions']
-        self._map_objects = map_objects.labyrinthe
+        self._map_dimensions = map_elem.labyrinthe['dimensions']
+        del map_elem.labyrinthe['dimensions']
+        self._map_objects = map_elem.labyrinthe
         self._player = self._map_objects['Personnage'][0]
         self._win = False
-        # on enregistre egalement le time stamp afin de differencier nos 
-        # sauvegardes.
-        self._timestamp = datetime.datetime.now()
+        self._map_name = map_elem.nom
 
     def _from_map_to_str(self):
         """Methode permettant la conversion de notre map en string."""
@@ -99,16 +97,28 @@ class Labyrinthe:
 
             if self._win:
                 print('Felicitations ! Vous avez gagné !')
-                self.save()
+                self.destroy_saved_game()
                 return True
         self.save()
         return False
 
+    def destroy_saved_game(self):
+        """On detruit la sauvegarde si le joueur gagne."""
+
+        if 'save' in self._map_name:
+            filename = '{}.txt'.format(self._map_name)
+        else:
+            filename = 'save-{}.txt'.format(self._map_name)
+        path = os.path.join('cartes', filename)
+
+        os.remove(path)
+
     def save(self):
         """Cette methode nous permet d'effectuer une sauvegarde."""
-        formated_timestamp = self._timestamp.strftime('%d-%m-%Y %H:%M:%S')
-        filename = 'save {}.txt'.format(formated_timestamp)
-
+        if 'save' in self._map_name:
+            filename = '{}.txt'.format(self._map_name)
+        else:
+            filename = 'save-{}.txt'.format(self._map_name)
         path = os.path.join('cartes', filename)
 
         # on ecrase la sauvegarde si une meme sauvegarde (meme partie) existe
