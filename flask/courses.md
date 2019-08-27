@@ -24,3 +24,23 @@ $ flask run \[--host specific_host\] \[--port specific_port\]
 
 To run your app in dev mode you should set 'FLASK_ENV' variable
 ```$ export FLASK_ENV="development"```
+
+With flask we can cast url path into variabvles:
+```
+@app.route('/basepath/\<var_type:variable\>')
+def function(variable):
+    return '%s' % variable
+```
+
+> Note that var_type precision is useless if type is str because it's default.
+
+PATH VARS TYPES:
+----------------
+
+|  Type  |                Desc                |
+|--------|------------------------------------|
+| string | (default) Text without slashes     |
+| int    | positives integers                 |
+| float  | positives floating points numbers  |
+| path   | as `str` but also accept slashes   |
+| uuid   | accepts UUID str                   |
