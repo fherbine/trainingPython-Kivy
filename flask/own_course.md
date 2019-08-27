@@ -19,3 +19,9 @@ Get variable with path.
 - scripts names: "path.py", "path.sh"
 - pages: "str", "int", "float", "path"
 - port: 5000
+
+Ex4:
+Get string with path using 'escape' function to convert into safe string.
+- "safe.py", "safe.sh"
+- pages only route
+- port 5000

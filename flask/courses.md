@@ -4,6 +4,7 @@ Glossary:
 - hello_world: Simple 'hello world text' dispatched on site route '/'.
 - sto: A kebab flask app wich have several routes with simple text in it.
 - path: Get variables via url path.
+- safe: simple str path use with escape func.
 
 Course:
 --------
@@ -46,3 +47,23 @@ PATH VARS TYPES:
 | float  | positives floating points numbers  |
 | path   | as `str` but also accept slashes   |
 | uuid   | accepts UUID str                   |
+
+To protect from url injection `pydoc flask.escape`, use 'escape function':
+```
+@app.route('/\<string\>')
+def pstring(string):
+    return '%s' % escape(string)
+```
+
+We can use 'flask.url_for(func, **kwargs)' to get corresponding URL to a
+specific flask function. To use it we should create a test context:
+```
+@app.route('/user/\<usn\>')
+def profile(usn):
+    return 'Username is %s' % usn
+
+with app.test_request_context():
+    print(url_for('profile', 'Felix Herbinet'))
+```
+
+`/user/Felix%20Herbinet`
