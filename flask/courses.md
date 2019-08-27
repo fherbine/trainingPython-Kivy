@@ -2,6 +2,8 @@ Glossary:
 ---------
 
 - hello_world: Simple 'hello world text' dispatched on site route '/'.
+- sto: A kebab flask app wich have several routes with simple text in it.
+- path: Get variables via url path.
 
 Course:
 --------
