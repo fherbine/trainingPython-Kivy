@@ -67,3 +67,12 @@ with app.test_request_context():
 ```
 
 `/user/Felix%20Herbinet`
+
+Lancer l'app flask depuis le py:
+```
+\# contenu de l'app
+
+if \_\_name\_\_ == '\_\_main\_\_':
+    app.run(host='host\<str\>', port=<port>, debug=True)
+
+```
