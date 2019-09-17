@@ -39,6 +39,9 @@ class Server():
             if buffered_infos:
                 output = self._cmd(buffered_infos)
                 client_connection.send(output.encode())
+
+                if output == 'QUIT':
+                    break
             
     def stop(self):
         self.server_connection.close()
@@ -50,8 +53,7 @@ class Server():
 
     def _parse(self, msg):
         msg = msg.decode()
-        msg.split(' ') + ['']
-        cmd = msg
+        cmd = msg.split(' ')
         return cmd
 
     def _cmd(self, msg):
@@ -63,14 +65,16 @@ class Server():
         
         command_function = getattr(self, CMDS[cmd])
 
-        return command_function(arg[1:])
+        return command_function(args[1:])
 
     def _help(self, *_):
         help_message = 'Available command are:\n- m [msg]:  for message,\n- h: for help,\n- q: to close connection'
         return help_message
 
     def _msg(self, arg):
-        return ''.join(arg)
+        return ' '.join(arg)
 
     def _quit(self, *_):
         self.stop()
+
+        return 'QUIT'
