@@ -78,3 +78,6 @@ class Server():
         self.stop()
 
         return 'QUIT'
+
+if __name__ == '__main__':
+    Server()
