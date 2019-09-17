@@ -1,0 +1,31 @@
+BoxLayout:
+    orientation: 'vertical'
+
+    RecycleView:
+        viewclass: 'MessageBox'
+
+        RecycleBoxLayout:
+
+    BoxLayout:
+        size_hint_y: .3
+
+        TextInput:
+            id: textinput
+            multiline: False
+            text: ''
+            size_hint_x: 1.5
+
+        Button:
+            text: 'Send message to server'
+            disabled: not bool(textinput.text)
+
+<MessageBox@BoxLayout>:
+    orientation: 'vertical'
+    src: ''
+    content: ''
+
+    Label:
+        text: root.src
+
+    Label:
+        text: root.content
