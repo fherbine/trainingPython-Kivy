@@ -1,10 +1,28 @@
 BoxLayout:
     orientation: 'vertical'
+    padding: dp(6)
+
+    canvas.before:
+        Color:
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
     RecycleView:
         viewclass: 'MessageBox'
+        data: app.message_data
+        bar_color: .6, .2, 1, 1
+        bar_width: dp(3)
+        pos_hint: {'center_x': .5}
+        size_hint_x: .95
 
         RecycleBoxLayout:
+            default_size_hint: 1, None
+            default_size: None, root.height / 6
+            orientation: 'vertical'
+            spacing: dp(3)
+            size_hint_y: None
+            height: self.minimum_height
 
     BoxLayout:
         size_hint_y: .3
@@ -19,13 +37,38 @@ BoxLayout:
             text: 'Send message to server'
             disabled: not bool(textinput.text)
 
+            on_press:
+                app.send_message(textinput.text)
+                textinput.text = ''
+
+
 <MessageBox@BoxLayout>:
     orientation: 'vertical'
     src: ''
     content: ''
+    padding: (dp(5),)
+
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 1
+        Line:
+            points:
+                (
+                self.x, self.y,
+                self.right, self.y,
+                self.right, self.top,
+                self.x, self.top,
+                self.x, self.y,
+                )
 
     Label:
+        color: .6, .3, 1, 1
         text: root.src
+        text_size: self.width, None
+        size_hint_y: None
+        height: self.texture_size[1]
 
     Label:
+        color: 0, 0, 0, 1
         text: root.content
+        text_size: self.width, None
