@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
                 if message == 'quit':
                     client_connection.close()
-                    clients_connected.pop(client)
+                    clients_connected.remove(client)
                     continue
 
                 confirm = 'Receive `{msg}` from {cli}'.format(
