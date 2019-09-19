@@ -1,6 +1,7 @@
 import os
 
 from configuration import MAPS_PATH
+from server_controllers.game_map import GameMap
 
 class Server:
     """Controlleur serveur.
@@ -10,11 +11,14 @@ class Server:
     des joueurs.
     """
 
+    game_map = None
+
     def get_map(self):
         """On demarre l'interface utilisateur pour la partie serveur.
         
         On récupère un objet Map, qui est le labyrinthe."""
         map_path = ServeurIhm().get_map()
+        self.game_map = GameMap(map_path)
 
 
 class ServerIhm:
