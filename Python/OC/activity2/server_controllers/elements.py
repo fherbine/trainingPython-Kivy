@@ -46,6 +46,7 @@ class ElementBase:
 class UserElement(ElementBase):
     def __init__(self, skin, pos):
         super().__init__(skin, pos)
+        self.static = False
 
 
 class WallElement(ElementBase):
