@@ -37,6 +37,14 @@ class ElementBase:
 
         self.x += 1
 
+    def make_door(self, collide_elem):
+        collide_elem.skin = '.'
+        collide_elem.collide = True
+
+    def make_wall(self, collide_elem):
+        collide_elem.skin = 'O'
+        collide_elem.collide = False
+
     def copy_element(self, element):
         self.pos = element.pos
 

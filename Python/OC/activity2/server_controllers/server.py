@@ -1,29 +1,183 @@
 import os
+import select
+import socket
 
-from configuration import MAPS_PATH
+from configuration import MAPS_PATH, PATH, AVAILABLE_COMMANDS
 from server_controllers.game_map import GameMap
 
 class Server:
     """Controlleur serveur.
-    
+
     Cette classe permet de controller tout ce qui est relatif au serveur.
     Excepté la gestion graphique du labyrinthe, et la logique de déplacement,
     des joueurs.
     """
 
+    clients = {}
     game_map = None
+    server_connection = None
+    current_player = 0
+
+    def __init__(self):
+        self.get_map()
+        self.start_server()
 
     def get_map(self):
         """On demarre l'interface utilisateur pour la partie serveur.
-        
+
         On récupère un objet Map, qui est le labyrinthe."""
         map_path = ServeurIhm().get_map()
         self.game_map = GameMap(map_path)
 
+    def start_server(self):
+        server_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_connection.bind(('', PORT))
+        server_connection.listen(5)
+        self.server_connection = server_connection
+
+    def run_server(self):
+        server_connection = self.server_connection
+
+        while True:
+            client_available, wlist, xlist = select.select(
+                [server_connection],
+                [],
+                [],
+                .05
+            )
+
+            if client_available:
+                game_map = self.game_map
+                client_connection, client_infos = server_connection.accept()
+                client_infos = str(client_infos)
+                self.current_player = len(self.clients)
+                skin = game_map.generate_player_skin()
+
+                if not skin:
+                    client_connection.send(b'Le serveur est complet !')
+                    client_connection.close()
+                    continue
+
+                player = game_map.add_player(skin)
+
+                self.clients.append({
+                    'player': player,
+                    'connection': client_connection,
+                })
+                self.send_message_to_client(
+                    'Bienvenue, votre skin est le suivant: `%s` !' % skin
+                )
+
+            for client_id, client_data in enumerate(self.clients):
+                recv_buffer = ''
+                client_connection = client_data['client_connection']
+                player = client_data['player']
+                rlist, wlist, xlist = select.select(
+                    [client_connetion],
+                    [],
+                    [],
+                    .05,
+                )
+
+                if rlist:
+                    recv_buffer = client_connetion.recv(1024).decode()
+
+                if client_id == self.current_player and recv_buffer:
+                    command = None
+
+                    while command is None:
+                        command, args = GameCommands().parse_command(
+                            recv_buffer
+                        )
+
+                        if command is None:
+                            client_connection.send((
+                                'Commande inexistante `%s`' % recv_buffer
+                            ).encode())
+                            # ici on peut bloquer la connexion puisque on ne
+                            # peut pas continuer si le client actif
+                            # ne saisie pas une commande valide.
+                            recv_buffer = client_connetion.recv(1024).decode()
+                            continue
+
+                        if command == '%QUIT%':
+                            game_map = self.game_map
+                            game_map.remove_player(player)
+                            client_connection.close()
+                            self.send_message_to_all_players(
+                                '`%s` a quitté le jeu !' % player.skin
+                            )
+                        else:
+                            game_map = self.game_map
+                            game_map.eval_command(player, command, args)
+
+                    self.send_game_map_to_players()
+
+    def send_game_map_to_players(self):
+        game_map = self.game_map
+        map_buffer = game_map.get_player_map(player)
+        self.send_game_map_to_players(map_buffer)
+
+    def send_message_to_all_players(self, message):
+        for client_id, client_data in enumerate(self.clients):
+            recv_buffer = ''
+            client_connection = client_data['client_connection']
+            player = client_data['player']
+            rlist, wlist, xlist = select.select(
+                [client_connetion],
+                [],
+                [],
+                .05,
+            )
+            self.send_message_to_client(client_connetion, message)
+
+    def send_message_to_client(self, client_conection, message):
+        client_connection.send(message.encode())
+
+    def stop_server(self):
+        self._close_client_connections()
+        self.server_connection.close()
+
+    def _close_client_connections(self):
+        clients_connection = [
+            client_data['client_connection'] for client_data in self.clients
+        ]
+        for client_connection in clients_connections:
+            client_connection.close()
+
+    def refuse_client(self, client):
+        pass
+
+    def add_player(self):
+        pass
+
+    def exec_client_game_cmd(self, client_infos, cmd):
+        client_data = self.clients.get(client_infos)
+        player = client_data['player']
+
+
+class GameCommands:
+    command = []
+
+    def parse_command(self, command_line):
+        if not command_line:
+            return None, None
+
+        cmd = command_line[0].upper()
+        args = command_line[1:].upper()
+
+        if self._command_is_available(cmd):
+            return AVAILABLE_COMMANDS[cmd], args
+
+        return None, None
+
+    def _command_is_available(self, cmd):
+        return cmd in AVAILABLE_COMMANDS
+
 
 class ServerIhm:
     """Interface machine pour le controlleur serveur.
-    
+
     Cette interface sert UNIQUEMENT pour la selection de du labyrithe coté
     serveur.
     """
@@ -80,7 +234,7 @@ class ServerIhm:
 
     def _get_maps(self):
         """Recupère les maps.
-        
+
         Elle doivent etre contenues dans le repertoire, précisé dans la gloable
         MAPS_PATH. par defaut `cartes`. Voir `configuration.py`
 
