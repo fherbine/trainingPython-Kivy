@@ -1,6 +1,3 @@
-MAPS_PATH='cartes'
-PORT=25000
-STATIC_ELEMENTS={'O': 'WallElement', '.': 'DoorElement', ' ': 'EmptyElement'}
 AVAILABLE_COMMANDS={
     'O': 'move_left',
     'E': 'move_right',
@@ -12,7 +9,7 @@ AVAILABLE_COMMANDS={
 }
 HOST='localhost'
 MAPS_PATH='cartes'
-PORT=26012
+PORT=25000
 STATIC_ELEMENTS={
     'U': 'ArrivalElement',
     'O': 'WallElement',

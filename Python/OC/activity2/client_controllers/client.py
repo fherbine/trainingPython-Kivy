@@ -1,20 +1,27 @@
 import queue
 import select
 import socket
-import threading
 import sys
+import threading
 
 from configuration import AVAILABLE_COMMANDS, PORT, HOST
 
 class Client:
+    """Classe controlleur du client.
+
+    Elle gère principalement le lancement du service de récuperation des inputs
+    utilisateurs, mais aussi la communication avec le serveur.
+    """
+
     client_service = None
-    service_queue = None
     run = True
+    service_queue = None
 
     def __init__(self):
         self.start_client()
 
     def start_client(self):
+        """On demarre le client."""
         self.client_connection = client_connection = socket.socket(
             socket.AF_INET,
             socket.SOCK_STREAM,
@@ -35,6 +42,12 @@ class Client:
         self.help()
 
     def run_client(self):
+        """Boucle principale du client.
+
+        Gère la lecture de la queue (pile FIFO) contenant les inputs claviers,
+        la communication de ces informations avec le serveur, mais également,
+        l'affichage des informations reçues.
+        """
         while self.run:
             send_buffer = ''
             client_connection = self.client_connection
@@ -70,11 +83,13 @@ class Client:
         self.stop()
 
     def stop(self):
+        """Arrete le client."""
         self.client_connection.close()
         self.client_service.join()
         sys.exit(0)
 
     def help(self):
+        """Affiche l'aide."""
         print('Les commandes disponnibles sont:')
         print('=== DEPLACEMENTS ===')
         print('- O: Se deplacer à l\'ouest.')
@@ -89,8 +104,14 @@ class Client:
 
 
 class ClientService(threading.Thread):
-    run = True
+    """Thread permettant de récuperer les entrées utilisateurs.
+
+    Utilise une Queue() FIFO(First In First Out) pour communiquer sans pertes
+    de données avec la classe controlleur.
+    """
+
     queue = None
+    run = True
 
     def __init__(self, queue, *args, **kwargs):
         self.queue = queue
