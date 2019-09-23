@@ -4,14 +4,17 @@ class ElementBase:
     def __init__(self, skin, **kwargs):
         self.skin = skin
         self.collide = kwargs.get('collide', False)
-        self.pos = None
+        self._pos = None
 
     def _set_pos(self, new_pos):
-        self.x, self.y = pos
-        self.pos = pos
+        if new_pos is None:
+            self.pos = None
+
+        self.x, self.y = new_pos
+        self._pos = new_pos
 
     def _get_pos(self):
-        return self.pos
+        return self._pos
 
     def move_up(self):
         if static:
@@ -52,15 +55,15 @@ class ElementBase:
 
 
 class UserElement(ElementBase):
-    def __init__(self, skin, pos):
-        super().__init__(skin, pos)
+    def __init__(self, skin):
+        super().__init__(skin)
         self.static = False
 
 
 class WallElement(ElementBase):
-    def __init__(self, pos):
+    def __init__(self):
         skin = 'O'
-        super().__init__(skin, pos)
+        super().__init__(skin)
 
 
 class DoorElement(ElementBase):

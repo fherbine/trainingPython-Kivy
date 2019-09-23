@@ -13,7 +13,7 @@ class GameMap:
 
     def __init__(self, path):
         self.map_path = path
-        self.load_map(path)
+        self.load_map()
 
     def load_map(self):
         self._read_map_file()
@@ -85,7 +85,7 @@ class GameMap:
 
         return None
 
-    def get_player_map(self, player)
+    def get_player_map(self, player):
         self._update_map_buffer(player)
         return str(self)
 
@@ -130,7 +130,9 @@ class GameMap:
 
         self.map_buffer = tmp_buffer
 
-    def _load_elements_from_map():
+    def _load_elements_from_map(self):
+        map_buffer = self.map_buffer
+
         for y, line in enumerate(map_buffer):
             for x, char in enumerate(line):
                 if char == '\n':

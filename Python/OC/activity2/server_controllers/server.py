@@ -1,8 +1,13 @@
 import os
 import select
+import signal
 import socket
 
-from configuration import MAPS_PATH, PATH, AVAILABLE_COMMANDS
+from configuration import (
+    AVAILABLE_COMMANDS,
+    MAPS_PATH,
+    PORT,
+)
 from server_controllers.game_map import GameMap
 
 class Server:
@@ -26,7 +31,7 @@ class Server:
         """On demarre l'interface utilisateur pour la partie serveur.
 
         On récupère un objet Map, qui est le labyrinthe."""
-        map_path = ServeurIhm().get_map()
+        map_path = ServerIhm().get_map()
         self.game_map = GameMap(map_path)
 
     def start_server(self):
@@ -34,11 +39,15 @@ class Server:
         server_connection.bind(('', PORT))
         server_connection.listen(5)
         self.server_connection = server_connection
+        self.run = True
+        signal.signal(signal.SIGINT, self._stop_running)
+        print('Le serveur est démarré !')
+        print('`Ctrl+C`: pour arreter le serveur.')
 
     def run_server(self):
         server_connection = self.server_connection
 
-        while True:
+        while self.run:
             client_available, wlist, xlist = select.select(
                 [server_connection],
                 [],
@@ -54,7 +63,7 @@ class Server:
                 skin = game_map.generate_player_skin()
 
                 if not skin:
-                    client_connection.send(b'Le serveur est complet !')
+                    client_connection.send(b'Le serveur est complet !\n')
                     client_connection.close()
                     continue
 
@@ -65,7 +74,7 @@ class Server:
                     'connection': client_connection,
                 })
                 self.send_message_to_client(
-                    'Bienvenue, votre skin est le suivant: `%s` !' % skin
+                    'Bienvenue, votre skin est le suivant: `%s` !\n' % skin
                 )
 
             for client_id, client_data in enumerate(self.clients):
@@ -112,6 +121,7 @@ class Server:
                             game_map.eval_command(player, command, args)
 
                     self.send_game_map_to_players()
+        self.stop_server()
 
     def send_game_map_to_players(self):
         game_map = self.game_map
@@ -134,12 +144,16 @@ class Server:
     def send_message_to_client(self, client_conection, message):
         client_connection.send(message.encode())
 
+    def _stop_running(self, *_):
+        self.run = False
+
     def stop_server(self):
         self._close_client_connections()
         self.server_connection.close()
+        self.server_connection = None
 
     def _close_client_connections(self):
-        clients_connection = [
+        clients_connections= [
             client_data['client_connection'] for client_data in self.clients
         ]
         for client_connection in clients_connections:
@@ -212,7 +226,7 @@ class ServerIhm:
                 selected_map = None
                 continue
 
-            if selected_map > len(maps) or selected_map < 1:
+            if selected_map > len(maps) or selected_map < 0:
                 print('Merci d\'entrer un nombre valide!')
                 selected_map = None
                 continue
