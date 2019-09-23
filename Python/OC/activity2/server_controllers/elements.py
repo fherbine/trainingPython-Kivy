@@ -17,28 +17,32 @@ class ElementBase:
         return self._pos
 
     def move_up(self):
-        if static:
+        if self.static:
             return
 
         self.y -= 1
+        self._update_pos_from_xy()
 
     def move_down(self):
-        if static:
+        if self.static:
             return
 
         self.y += 1
+        self._update_pos_from_xy()
 
     def move_left(self):
-        if static:
+        if self.static:
             return
 
         self.x -= 1
+        self._update_pos_from_xy()
 
     def move_right(self):
-        if static:
+        if self.static:
             return
 
         self.x += 1
+        self._update_pos_from_xy()
 
     def make_door(self, collide_elem):
         collide_elem.skin = '.'
@@ -50,6 +54,9 @@ class ElementBase:
 
     def copy_element(self, element):
         self.pos = element.pos
+
+    def _update_pos_from_xy(self):
+        self.pos = (self.x, self.y)
 
     pos = property(_get_pos, _set_pos)
 

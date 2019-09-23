@@ -10,3 +10,12 @@ AVAILABLE_COMMANDS={
     'P': 'make_door',
     'Q': '%QUIT%',
 }
+HOST='localhost'
+MAPS_PATH='cartes'
+PORT=26012
+STATIC_ELEMENTS={
+    'U': 'ArrivalElement',
+    'O': 'WallElement',
+    '.': 'DoorElement',
+    ' ': 'EmptyElement',
+}

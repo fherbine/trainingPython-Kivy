@@ -18,7 +18,7 @@ class Server:
     des joueurs.
     """
 
-    clients = {}
+    clients = []
     game_map = None
     server_connection = None
     current_player = 0
@@ -56,101 +56,152 @@ class Server:
             )
 
             if client_available:
-                game_map = self.game_map
-                client_connection, client_infos = server_connection.accept()
-                client_infos = str(client_infos)
-                self.current_player = len(self.clients)
-                skin = game_map.generate_player_skin()
+                client_is_added = self._add_new_client()
 
-                if not skin:
-                    client_connection.send(b'Le serveur est complet !\n')
-                    client_connection.close()
+                if not client_is_added:
                     continue
-
-                player = game_map.add_player(skin)
-
-                self.clients.append({
-                    'player': player,
-                    'connection': client_connection,
-                })
-                self.send_message_to_client(
-                    'Bienvenue, votre skin est le suivant: `%s` !\n' % skin
-                )
 
             for client_id, client_data in enumerate(self.clients):
                 recv_buffer = ''
-                client_connection = client_data['client_connection']
+                client_connection = client_data['connection']
                 player = client_data['player']
                 rlist, wlist, xlist = select.select(
-                    [client_connetion],
+                    [client_connection],
                     [],
                     [],
                     .05,
                 )
 
                 if rlist:
-                    recv_buffer = client_connetion.recv(1024).decode()
+                    recv_buffer = client_connection.recv(1024).decode()
 
                 if client_id == self.current_player and recv_buffer:
-                    command = None
+                    running = self._get_current_client_cmd(
+                        client_connection,
+                        player,
+                        recv_buffer,
+                    )
 
-                    while command is None:
-                        command, args = GameCommands().parse_command(
-                            recv_buffer
-                        )
-
-                        if command is None:
-                            client_connection.send((
-                                'Commande inexistante `%s`' % recv_buffer
-                            ).encode())
-                            # ici on peut bloquer la connexion puisque on ne
-                            # peut pas continuer si le client actif
-                            # ne saisie pas une commande valide.
-                            recv_buffer = client_connetion.recv(1024).decode()
-                            continue
-
-                        if command == '%QUIT%':
-                            game_map = self.game_map
-                            game_map.remove_player(player)
-                            client_connection.close()
-                            self.send_message_to_all_players(
-                                '`%s` a quitté le jeu !' % player.skin
-                            )
-                        else:
-                            game_map = self.game_map
-                            cmd_done = game_map.eval_command(
-                                player,
-                                command,
-                                args,
-                            )
-                            if cmd_done:
-                                if self.current_player + 1 < len(self.clients):
-                                    self.current_player += 1
-                                else:
-                                    self.current_player = 0
+                    if not running:
+                        return
 
                     self.send_game_map_to_players()
         self.stop_server()
 
-    def send_game_map_to_players(self):
-        game_map = self.game_map
-        map_buffer = game_map.get_player_map(player)
-        self.send_game_map_to_players(map_buffer)
+    def _get_current_client_cmd(self, client_connection, player, recv_buffer):
+        command = None
 
-    def send_message_to_all_players(self, message):
+        while command is None:
+            command, args = GameCommands().parse_command(
+                recv_buffer
+            )
+
+            if command is None:
+                client_connection.send((
+                    'Commande inexistante `%s`' % recv_buffer
+                ).encode())
+                # ici on peut bloquer la connexion puisque on ne
+                # peut pas continuer si le client actif
+                # ne saisie pas une commande valide.
+                recv_buffer = client_connection.recv(1024).decode()
+                continue
+
+            if command == '%QUIT%':
+                game_map = self.game_map
+                game_map.remove_player(player)
+                client_connection.close()
+                self.clients.remove(client_data)
+                self.send_message_to_all_players(
+                    '`%s` a quitté le jeu !' % player
+                )
+            else:
+                game_map = self.game_map
+                cmd_done, return_code = game_map.eval_command(
+                    player,
+                    command,
+                    args,
+                )
+                if return_code == '%WIN%':
+                    self.send_message_to_all_players(
+                        '\n`%s` a gagné la partie !\n' % player
+                    )
+                    self.send_game_map_to_players()
+                    self.run = False
+                    self.stop_server()
+                    return False
+
+                elif cmd_done:
+                    if self.current_player + 1 < len(self.clients):
+                        self.current_player += 1
+                    else:
+                        self.current_player = 0
+                else:
+                    self.send_message_to_client(
+                        client_connection,
+                    'Commande impossible: `%s` !\n' % recv_buffer
+                    )
+        return True
+
+    def _add_new_client(self):
+        server_connection = self.server_connection
+        game_map = self.game_map
+
+        client_connection, _ = server_connection.accept()
+        self.current_player = len(self.clients)
+        skin = game_map.generate_player_skin()
+
+        if not skin:
+            client_connection.send(b'Le serveur est complet !\n')
+            client_connection.close()
+            return False
+
+        game_map.add_player(skin)
+
+        self.clients.append({
+            'player': skin,
+            'connection': client_connection,
+        })
+        self.send_message_to_client(
+            client_connection,
+            'Bienvenue, votre skin est le suivant: `%s` !\n' % skin
+        )
+        self.send_game_map_to_players()
+        return True
+
+    def _send_prompt_to_current_client(self):
+        client_connection = self.clients[self.current_player]['connection']
+        client_connection.send(b'>>>')
+
+    def send_game_map_to_players(self):
         for client_id, client_data in enumerate(self.clients):
             recv_buffer = ''
-            client_connection = client_data['client_connection']
+            client_connection = client_data['connection']
             player = client_data['player']
             rlist, wlist, xlist = select.select(
-                [client_connetion],
+                [client_connection],
                 [],
                 [],
                 .05,
             )
-            self.send_message_to_client(client_connetion, message)
+            game_map = self.game_map
+            map_buffer = game_map.get_player_map(player)
+            self.send_message_to_client(client_connection, map_buffer)
+        self._send_prompt_to_current_client()
 
-    def send_message_to_client(self, client_conection, message):
+    def send_message_to_all_players(self, message):
+        for client_id, client_data in enumerate(self.clients):
+            recv_buffer = ''
+            client_connection = client_data['connection']
+            player = client_data['player']
+            rlist, wlist, xlist = select.select(
+                [client_connection],
+                [],
+                [],
+                .05,
+            )
+            self.send_message_to_client(client_connection, message)
+
+    def send_message_to_client(self, client_connection, message):
         client_connection.send(message.encode())
 
     def _stop_running(self, *_):
@@ -163,20 +214,10 @@ class Server:
 
     def _close_client_connections(self):
         clients_connections= [
-            client_data['client_connection'] for client_data in self.clients
+            client_data['connection'] for client_data in self.clients
         ]
         for client_connection in clients_connections:
             client_connection.close()
-
-    def refuse_client(self, client):
-        pass
-
-    def add_player(self):
-        pass
-
-    def exec_client_game_cmd(self, client_infos, cmd):
-        client_data = self.clients.get(client_infos)
-        player = client_data['player']
 
 
 class GameCommands:
