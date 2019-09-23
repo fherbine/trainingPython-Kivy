@@ -118,7 +118,16 @@ class Server:
                             )
                         else:
                             game_map = self.game_map
-                            game_map.eval_command(player, command, args)
+                            cmd_done = game_map.eval_command(
+                                player,
+                                command,
+                                args,
+                            )
+                            if cmd_done:
+                                if self.current_player + 1 < len(self.clients):
+                                    self.current_player += 1
+                                else:
+                                    self.current_player = 0
 
                     self.send_game_map_to_players()
         self.stop_server()

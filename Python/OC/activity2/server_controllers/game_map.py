@@ -78,6 +78,8 @@ class GameMap:
 
             player_cmd(collide_elem)
 
+        return True
+
     def _get_element_at_pos(self, pos):
         for elem in self.elements:
             if elem.pos == pos:
