@@ -1,0 +1,47 @@
+<Tile>:
+    g: 0
+    h: 0
+    f: 0
+
+<NumberTile>:
+    color: 1, 1, 1, 0
+    negative_color: [1 - rgb for rgb in self.color[:3]] + [1]
+
+    canvas.before:
+        Color:
+            rgba: root.color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: root.negative_color
+        Line:
+            points:
+                (
+                self.x, self.y,
+                self.right, self.y,
+                self.right, self.top,
+                self.x, self.top,
+                self.x, self.y,
+                )
+
+    Label:
+        color: root.negative_color
+        text: 'g = {}'.format(root.g)
+        pos_hint: {'x': .1, 'top': .9}
+        size_hint: None, None
+        size: self.texture_size
+
+    Label:
+        color: root.negative_color
+        text: 'h = {}'.format(root.h)
+        pos_hint: {'right': .9, 'y': .1}
+        size_hint: None, None
+        size: self.texture_size
+
+    Label:
+        color: root.negative_color
+        text: 'f = g + h = {}'.format(root.f)
+        pos_hint: {'center': (.5, .5)}
+        size_hint: None, None
+        size: self.texture_size
