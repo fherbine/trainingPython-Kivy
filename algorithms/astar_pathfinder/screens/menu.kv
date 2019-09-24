@@ -11,7 +11,7 @@
 
             TextInput:
                 id: width
-                text: ''
+                text: '10'
                 multiline: False
 
             Label:
@@ -19,11 +19,12 @@
 
             TextInput:
                 id: height
-                text: ''
+                text: '10'
                 multiline: False
 
         Button:
             text: 'distance/calculation mode'
+            on_press: root.do_pathfinder_calc_mode(width.text, height.text)
 
         Button:
             text: 'simulation mode'
