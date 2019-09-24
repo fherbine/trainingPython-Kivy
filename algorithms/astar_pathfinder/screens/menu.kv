@@ -5,6 +5,23 @@
         pos_hint: {'center': (.5, .5)}
         size_hint: .5, .5
 
+        BoxLayout:
+            Label:
+                text: 'width:'
+
+            TextInput:
+                id: width
+                text: ''
+                multiline: False
+
+            Label:
+                text: 'height:'
+
+            TextInput:
+                id: height
+                text: ''
+                multiline: False
+
         Button:
             text: 'distance/calculation mode'
 
