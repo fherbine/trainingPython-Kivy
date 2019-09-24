@@ -34,14 +34,15 @@ class PathFinderScreen(Screen):
         self.container.cols = self.w
 
         for y in range(self.h):
+            self.tiles.append(list())
             for x in range(self.w):
                 tile = self.tile_class(on_press=self.eval_tile)
                 tile.tile_pos = (x, y)
-                self.tiles.append(tile)
+                self.tiles[y].append(tile)
                 self.container.add_widget(tile)
 
     def eval_tile(self, tile):
-        if tile not in self.tiles or not self.action:
+        if not self.action:
             return
 
         tile.color = self.action_colors[self.action]
