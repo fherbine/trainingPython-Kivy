@@ -15,6 +15,8 @@ class PathFinderScreen(Screen):
     tiles = ListProperty()
     tile_class = ObjectProperty(allownone=True)
     container = ObjectProperty(allonone=True)
+    departure_tile = ObjectProperty(allownone=True)
+    arrival_tile = ObjectProperty(allownone=True)
 
     action_colors = {
         'arrival': (.2, 1, .2, 1),
@@ -31,18 +33,21 @@ class PathFinderScreen(Screen):
     def fill_map(self):
         self.container.cols = self.w
 
-        for _ in range(self.w * self.h):
-            tile = self.tile_class(on_press=self.eval_tile)
-            self.tiles.append(tile)
-            self.container.add_widget(tile)
+        for y in range(self.h):
+            for x in range(self.w):
+                tile = self.tile_class(on_press=self.eval_tile)
+                tile.tile_pos = (x, y)
+                self.tiles.append(tile)
+                self.container.add_widget(tile)
 
     def eval_tile(self, tile):
-        if tile not in self.tiles:
+        if tile not in self.tiles or not self.action:
             return
 
         tile.color = self.action_colors[self.action]
 
         if self.action in ('arrival', 'departure'):
+            setattr(self, self.action + '_tile', tile)
             self.action = ''
 
     def reset(self):

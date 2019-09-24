@@ -1,5 +1,7 @@
 <PathFinderScreen>:
     action: ''
+    arrival_tile: None
+    departure_tile: None
     container: container
 
     BoxLayout:
@@ -16,6 +18,7 @@
 
             Button:
                 text: 'place arrival'
+                disabled: not bool(root.departure_tile)
                 on_release: root.action = 'arrival'
 
             Button:
