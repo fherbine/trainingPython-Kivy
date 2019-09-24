@@ -4,7 +4,7 @@
     f: 0
 
 <NumberTile>:
-    color: 1, 1, 1, 0
+    color: 1, 1, 1, 1
     negative_color: [1 - rgb for rgb in self.color[:3]] + [1]
 
     canvas.before:
@@ -14,7 +14,7 @@
             pos: self.pos
             size: self.size
         Color:
-            rgba: root.negative_color
+            rgba: (root.negative_color) if root.negative_color else (0, 0, 0, 1)
         Line:
             points:
                 (

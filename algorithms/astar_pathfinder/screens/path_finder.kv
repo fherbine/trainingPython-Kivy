@@ -1,1 +1,22 @@
 <PathFinderScreen>:
+    container: container
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        BoxLayout:
+            size_hint_y: .3
+            spacing: dp(40)
+            padding: (dp(20),)
+
+            Button:
+                text: 'place departure'
+
+            Button:
+                text: 'place arrival'
+
+            Button:
+                text: 'place wall'
+
+        GridLayout:
+            id: container
