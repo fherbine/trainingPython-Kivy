@@ -1,4 +1,5 @@
 <PathFinderScreen>:
+    action: ''
     container: container
 
     BoxLayout:
@@ -11,12 +12,19 @@
 
             Button:
                 text: 'place departure'
+                on_release: root.action = 'departure'
 
             Button:
                 text: 'place arrival'
+                on_release: root.action = 'arrival'
 
             Button:
-                text: 'place wall'
+                text: 'place wall' if root.action != 'wall' else 'done'
+                on_release: root.action = 'wall' if root.action != 'wall' else ''
+
+            Button:
+                text: 'reset'
+                on_release: root.reset()
 
         GridLayout:
             id: container
