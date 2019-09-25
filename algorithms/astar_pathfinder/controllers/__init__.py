@@ -1,3 +1,3 @@
-from kivy.controllers import (
+from controllers import (
     path_finder,
 )
