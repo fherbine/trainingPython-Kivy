@@ -85,7 +85,6 @@ class PathFinder(EventDispatcher):
                 copied_cpath,
                 g_dist + tile._distance_from_tile(a_tile),
             )
-            print(b_path)
             if b_path is not None:
                 break
         #paths = [path for path in paths if path is not None]
@@ -114,32 +113,32 @@ class PathFinder(EventDispatcher):
         left_tile = self.get_tile_from_coordinate(tx-1, ty)
         right_tile = self.get_tile_from_coordinate(tx+1, ty)
 
-        accessible = zip([top_tile, bottom_tile, left_tile, right_tile], [1] * 4)
-        accessible = [(atile, g) for atile, g in accessible if atile is not None and self._is_tile_wakable(atile)]
+        accessible = [top_tile, bottom_tile, left_tile, right_tile]
+        accessible = [atile for atile in accessible if atile is not None and self._is_tile_wakable(atile)]
+        accessible_tuples = list(zip(accessible, [1] * len(accessible)))
 
         if not self.diagonals:
-            return self._sort_accessible([(atile, g) for atile, g in accessible if atile.tile_pos not in current_path['path']], g_dist, dst)
-
-        tr_tile, tl_tile, br_tile, bl_tile = None, None, None, None
+            return self._sort_accessible([(atile, g) for atile, g in accessible_tuples if atile.tile_pos not in current_path['path']], g_dist, dst)
 
         if top_tile in accessible and right_tile in accessible:
-            accessible.append((self.get_tile_from_coordinate(tx+1, ty-1), math.sqrt(2)))
+            accessible_tuples.append((self.get_tile_from_coordinate(tx+1, ty-1), math.sqrt(2)))
 
         if top_tile in accessible and left_tile in accessible:
-            accessible.append((self.get_tile_from_coordinate(tx-1, ty-1), math.sqrt(2)))
+            accessible_tuples.append((self.get_tile_from_coordinate(tx-1, ty-1), math.sqrt(2)))
 
         if bottom_tile in accessible and right_tile in accessible:
-            accessible.append((self.get_tile_from_coordinate(tx+1, ty+1), math.sqrt(2)))
+            accessible_tuples.append((self.get_tile_from_coordinate(tx+1, ty+1), math.sqrt(2)))
 
         if bottom_tile in accessible and left_tile in accessible:
-            accessible.append((self.get_tile_from_coordinate(tx-1, ty+1), math.sqrt(2)))
+            accessible_tuples.append((self.get_tile_from_coordinate(tx-1, ty+1), math.sqrt(2)))
 
-        return self._sort_accessible([(atile, g) for atile, g in accessible if atile.tile_pos not in current_path['path'] and self._is_tile_wakable(atile)], g_dist, dst)
+
+        return self._sort_accessible([(atile, g) for atile, g in accessible_tuples if atile.tile_pos not in current_path['path'] and self._is_tile_wakable(atile)], g_dist, dst)
 
     def _sort_accessible(self, accessible, g_dist, dst):
         acces = list()
         for tile, g in accessible:
-            tile.g = g_dist + g
+            tile.g = round(g_dist + g, 2)
             acces.append(tile)
 
         sort = sorted(acces, key=lambda src: self._distance_from_tile(src, dst) + src.g)
