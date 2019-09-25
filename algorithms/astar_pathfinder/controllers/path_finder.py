@@ -38,7 +38,7 @@ class PathFinder(EventDispatcher):
     def on_arrival_tile(self, *_):
         if not self.arrival_tile:
             return
-        
+
         self.best_weight = self.xmap * self.ymap * 10
         current_path = {'path': [], 'weight': 0}
         self.best_path = self.pathfinder(
@@ -62,7 +62,7 @@ class PathFinder(EventDispatcher):
         tile.color = total_weight/100, h_dist/100, g_dist, 1
         ###
         current_path['weight'] += total_weight
-        accessible_tiles = self._list_accessible_tiles(tile, current_path, dst_tile)
+        accessible_tiles = self._list_accessible_tiles(tile, current_path, g_dist, dst_tile)
 
 
         if not accessible_tiles or current_path['weight'] > self.best_weight:
@@ -75,18 +75,23 @@ class PathFinder(EventDispatcher):
 
         paths = list()
 
+        b_path = None
+
         for a_tile in accessible_tiles:
             copied_cpath = self._special_copy(current_path)
-            paths.append(self.pathfinder(
+            b_path = self.pathfinder(
                 a_tile,
                 dst_tile,
                 copied_cpath,
                 g_dist + tile._distance_from_tile(a_tile),
-            ))
-        paths = [path for path in paths if path is not None]
+            )
+            print(b_path)
+            if b_path is not None:
+                break
+        #paths = [path for path in paths if path is not None]
 
 
-        return self._keep_best_path(paths)
+        return b_path
 
     def _keep_best_path(self, paths):
         if not paths:
@@ -100,7 +105,7 @@ class PathFinder(EventDispatcher):
 
         return lighter
 
-    def _list_accessible_tiles(self, tile, current_path, dst):
+    def _list_accessible_tiles(self, tile, current_path, g_dist,dst):
         accessible = []
         tx, ty = tile.tile_pos
 
@@ -109,39 +114,38 @@ class PathFinder(EventDispatcher):
         left_tile = self.get_tile_from_coordinate(tx-1, ty)
         right_tile = self.get_tile_from_coordinate(tx+1, ty)
 
-        accessible = [top_tile, bottom_tile, left_tile, right_tile]
-        accessible = self._sort_accessible([atile for atile in accessible if atile is not None and self._is_tile_wakable(atile)], dst)
+        accessible = zip([top_tile, bottom_tile, left_tile, right_tile], [1] * 4)
+        accessible = [(atile, g) for atile, g in accessible if atile is not None and self._is_tile_wakable(atile)]
 
         if not self.diagonals:
-            return self._sort_accessible([atile for atile in accessible if atile.tile_pos not in current_path['path']], dst)
+            return self._sort_accessible([(atile, g) for atile, g in accessible if atile.tile_pos not in current_path['path']], g_dist, dst)
 
         tr_tile, tl_tile, br_tile, bl_tile = None, None, None, None
 
         if top_tile in accessible and right_tile in accessible:
-            accessible.append(self.get_tile_from_coordinate(tx+1, ty-1))
+            accessible.append((self.get_tile_from_coordinate(tx+1, ty-1), math.sqrt(2)))
 
         if top_tile in accessible and left_tile in accessible:
-            accessible.append(self.get_tile_from_coordinate(tx-1, ty-1))
+            accessible.append((self.get_tile_from_coordinate(tx-1, ty-1), math.sqrt(2)))
 
         if bottom_tile in accessible and right_tile in accessible:
-            accessible.append(self.get_tile_from_coordinate(tx+1, ty+1))
+            accessible.append((self.get_tile_from_coordinate(tx+1, ty+1), math.sqrt(2)))
 
         if bottom_tile in accessible and left_tile in accessible:
-            accessible.append(self.get_tile_from_coordinate(tx-1, ty+1))
+            accessible.append((self.get_tile_from_coordinate(tx-1, ty+1), math.sqrt(2)))
 
-        return self._sort_accessible([atile for atile in accessible if atile.tile_pos not in current_path['path'] and self._is_tile_wakable(atile)], dst)
+        return self._sort_accessible([(atile, g) for atile, g in accessible if atile.tile_pos not in current_path['path'] and self._is_tile_wakable(atile)], g_dist, dst)
 
-    def _sort_accessible(self, accessible, dst):
-        acces = accessible
-        sort = sorted(accessible, key=lambda src: self._distance_from_tile(src, dst))
+    def _sort_accessible(self, accessible, g_dist, dst):
+        acces = list()
+        for tile, g in accessible:
+            tile.g = g_dist + g
+            acces.append(tile)
 
+        sort = sorted(acces, key=lambda src: self._distance_from_tile(src, dst) + src.g)
 
-        #if accessible == sort:
-        #    print('t', end='')
-        #else:
-        #    print(False)
         return sort
-            
+
 
     def _distance_from_tiles(self, src_tile, *tiles):
         return [
