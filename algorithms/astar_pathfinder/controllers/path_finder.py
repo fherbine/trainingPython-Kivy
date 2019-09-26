@@ -118,22 +118,34 @@ class PathFinder(EventDispatcher):
         accessible_tuples = list(zip(accessible, [1] * len(accessible)))
 
         if not self.diagonals:
-            return self._sort_accessible([(atile, g) for atile, g in accessible_tuples if atile.tile_pos not in current_path['path']], g_dist, dst)
+            sorted_list = self._sort_accessible([(atile, g) for atile, g in accessible_tuples if atile.tile_pos not in current_path['path']], g_dist, dst)
+            if not self._is_tiles_wakable_in_list(sorted_list):
+                return None
+            return sorted_list
 
-        if top_tile in accessible and right_tile in accessible:
-            accessible_tuples.append((self.get_tile_from_coordinate(tx+1, ty-1), math.sqrt(2)))
+        if top_tile in accessible or right_tile in accessible:
+            dtile = self.get_tile_from_coordinate(tx+1, ty-1)
+            if dtile is not None:
+                accessible_tuples.append((dtile, math.sqrt(2)))
 
-        if top_tile in accessible and left_tile in accessible:
-            accessible_tuples.append((self.get_tile_from_coordinate(tx-1, ty-1), math.sqrt(2)))
+        if top_tile in accessible or left_tile in accessible:
+            dtile = self.get_tile_from_coordinate(tx-1, ty-1)
+            if dtile is not None:
+                accessible_tuples.append((dtile, math.sqrt(2)))
 
-        if bottom_tile in accessible and right_tile in accessible:
-            accessible_tuples.append((self.get_tile_from_coordinate(tx+1, ty+1), math.sqrt(2)))
+        if bottom_tile in accessible or right_tile in accessible:
+            dtile = self.get_tile_from_coordinate(tx+1, ty+1)
+            if dtile is not None:
+                accessible_tuples.append((dtile, math.sqrt(2)))
 
-        if bottom_tile in accessible and left_tile in accessible:
-            accessible_tuples.append((self.get_tile_from_coordinate(tx-1, ty+1), math.sqrt(2)))
+        if bottom_tile in accessible or left_tile in accessible:
+            dtile = self.get_tile_from_coordinate(tx-1, ty+1)
+            if dtile is not None:
+                accessible_tuples.append((dtile, math.sqrt(2)))
 
 
-        return self._sort_accessible([(atile, g) for atile, g in accessible_tuples if atile.tile_pos not in current_path['path'] and self._is_tile_wakable(atile)], g_dist, dst)
+        sorted_list = self._sort_accessible([(atile, g) for atile, g in accessible_tuples if atile.tile_pos not in current_path['path'] and self._is_tile_wakable(atile)], g_dist, dst)
+        return sorted_list
 
     def _sort_accessible(self, accessible, g_dist, dst):
         acces = list()
