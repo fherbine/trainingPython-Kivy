@@ -2,6 +2,7 @@
     g: 0
     h: 0
     f: 0
+    o: 0
 
 <NumberTile>:
     color: 1, 1, 1, 1
@@ -35,6 +36,13 @@
     Label:
         color: root.negative_color
         text: 'h = {}'.format(root.h)
+        pos_hint: {'x': .1, 'y': .1}
+        size_hint: None, None
+        size: self.texture_size
+
+    Label:
+        color: root.negative_color
+        text: '{}'.format(root.o)
         pos_hint: {'right': .9, 'y': .1}
         size_hint: None, None
         size: self.texture_size

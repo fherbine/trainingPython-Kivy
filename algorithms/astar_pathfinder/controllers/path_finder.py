@@ -39,7 +39,7 @@ class PathFinder(EventDispatcher):
         if not self.arrival_tile:
             return
 
-        self.best_weight = self.xmap * self.ymap * 10
+        self.best_weight = self.xmap * self.ymap * 100
         current_path = {'path': [], 'weight': 0}
         self.best_path = self.pathfinder(
             self.departure_tile,
@@ -63,6 +63,7 @@ class PathFinder(EventDispatcher):
         ###
         current_path['weight'] += total_weight
         accessible_tiles = self._list_accessible_tiles(tile, current_path, g_dist, dst_tile)
+        current_path = self._get_better_accessible(accessible_tiles, current_path)
 
 
         if not accessible_tiles or current_path['weight'] > self.best_weight:
@@ -87,7 +88,6 @@ class PathFinder(EventDispatcher):
             )
             if b_path is not None:
                 break
-        #paths = [path for path in paths if path is not None]
 
 
         return b_path
@@ -104,6 +104,28 @@ class PathFinder(EventDispatcher):
 
         return lighter
 
+    def _get_better_accessible(self, accessible, current_path):
+        already_in_path = []
+
+
+        for tile in accessible:
+            if tile.tile_pos in current_path['path']:
+                already_in_path.append(tile)
+
+
+        already_in_path.sort(key=lambda tile: tile.g)
+        for tile  in accessible:
+            if tile.tile_pos in current_path['path']:
+                accessible.remove(tile)
+
+        if already_in_path:
+            already_in_path.pop(0).tile_pos
+
+        for tile in already_in_path:
+            current_path['path'].remove(tile.tile_pos)
+
+        return current_path
+
     def _list_accessible_tiles(self, tile, current_path, g_dist,dst):
         accessible = []
         tx, ty = tile.tile_pos
@@ -118,7 +140,7 @@ class PathFinder(EventDispatcher):
         accessible_tuples = list(zip(accessible, [1] * len(accessible)))
 
         if not self.diagonals:
-            sorted_list = self._sort_accessible([(atile, g) for atile, g in accessible_tuples if atile.tile_pos not in current_path['path']], g_dist, dst)
+            sorted_list = self._sort_accessible([(atile, g) for atile, g in accessible_tuples], g_dist, dst, current_path)
             if not self._is_tiles_wakable_in_list(sorted_list):
                 return None
             return sorted_list
@@ -144,13 +166,14 @@ class PathFinder(EventDispatcher):
                 accessible_tuples.append((dtile, math.sqrt(2)))
 
 
-        sorted_list = self._sort_accessible([(atile, g) for atile, g in accessible_tuples if atile.tile_pos not in current_path['path'] and self._is_tile_wakable(atile)], g_dist, dst)
+        sorted_list = self._sort_accessible([(atile, g) for atile, g in accessible_tuples if self._is_tile_wakable(atile)], g_dist, dst, current_path)
         return sorted_list
 
-    def _sort_accessible(self, accessible, g_dist, dst):
+    def _sort_accessible(self, accessible, g_dist, dst, current_path):
         acces = list()
         for tile, g in accessible:
-            tile.g = round(g_dist + g, 2)
+            if tile.tile_pos not in current_path['path']:
+                tile.g = round(g_dist + g, 2)
             acces.append(tile)
 
         sort = sorted(acces, key=lambda src: self._distance_from_tile(src, dst) + src.g)
@@ -168,6 +191,12 @@ class PathFinder(EventDispatcher):
         tx2, ty2 = tile2.tile_pos
 
         return math.sqrt((tx2 - tx1)**2 + (ty2 - ty1)**2)
+
+    def _is_tiles_wakable_in_list(self, tiles):
+        for tile in tiles:
+            if not self._is_tile_wakable(tile):
+                return False
+        return True
 
     def _is_tile_wakable(self, tile):
         if tile.level > self.level:

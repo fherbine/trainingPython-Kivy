@@ -32,9 +32,11 @@ class PathFinderScreen(Screen):
         if not self.best_path:
             return
         else:
-            for tile_pos in self.best_path['path']:
-                tile = self.path_finder.get_tile_from_coordinate(*tile_pos)
+            for idx, tile_pos in enumerate(self.best_path['path']):
+                x, y = tile_pos
+                tile = self.tiles[y][x]
                 tile.color = 0, 1, 0, 1
+                tile.o = idx
 
     def on_tiles_type(self, *_):
         if not self.tiles_type:
