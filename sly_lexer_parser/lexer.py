@@ -10,7 +10,7 @@ class CalcLexer(Lexer):
     tokens = { ID, NUMBER, PLUS, MINUS, TIMES,
                DIVIDE, ASSIGN, LPAREN, RPAREN,
                MODULO, EQ, IF, ELSE, WHILE,
-               PRINT }
+               PRINT, NEQ, LE, LT, GE, GT }
 
     # Set litterals character
     literals = { '{', '}', ';' }
@@ -41,6 +41,11 @@ class CalcLexer(Lexer):
     LPAREN  = r'\('
     RPAREN  = r'\)'
     MODULO  = r'%'
+    NEQ     = r'!='
+    LE      = r'<='
+    LT      = r'<'
+    GE      = r'>='
+    GT      = r'>'
 
     def __init__(self):
         self.nesting_level = 0
