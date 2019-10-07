@@ -49,6 +49,10 @@ class CalcLexer(Lexer):
         """Counting line number."""
         self.lineno += len(t.value)
 
+    def error(self, token):
+        print('Illegal character `%s`' % token.value[0])
+        self.index += 1
+
 
 if __name__ == '__main__':
     lexer = CalcLexer()
