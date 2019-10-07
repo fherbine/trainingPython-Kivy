@@ -39,6 +39,11 @@ class CalcLexer(Lexer):
     RPAREN  = r'\)'
     MODULO  = r'%'
 
+    def NUMBER(self, token):
+        """Casting when received token type is NUMBER."""
+        token.value = int(token.value)
+        return token
+
 if __name__ == '__main__':
     lexer = CalcLexer()
 
