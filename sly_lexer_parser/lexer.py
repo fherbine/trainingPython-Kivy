@@ -12,6 +12,9 @@ class CalcLexer(Lexer):
                MODULO, EQ, IF, ELSE, WHILE,
                PRINT }
 
+    # Set litterals character
+    literals = { '{', '}' }
+
     # Inline characters to ignore
     ignore = ' \t'
 
@@ -39,6 +42,9 @@ class CalcLexer(Lexer):
     RPAREN  = r'\)'
     MODULO  = r'%'
 
+    def __init__(self):
+        self.nesting_level = 0
+
     def NUMBER(self, token):
         """Casting when received token type is NUMBER."""
         token.value = int(token.value)
@@ -48,6 +54,18 @@ class CalcLexer(Lexer):
     def ignore_newline(self, token):
         """Counting line number."""
         self.lineno += len(t.value)
+
+    @_(r'\{')
+    def lbrace(self, token):
+        token.type = '{' # set token type to the expected literal
+        self.nesting_level -= 1
+        return token
+
+    @_(r'\}')
+    def rbrace(self, token):
+        token.type = '}'
+        self.nesting_level += 1
+        return token
 
     def error(self, token):
         print('Illegal character `%s`' % token.value[0])
