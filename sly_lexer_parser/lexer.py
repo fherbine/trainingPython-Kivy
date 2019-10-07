@@ -11,8 +11,12 @@ class CalcLexer(Lexer):
                DIVIDE, ASSIGN, LPAREN, RPAREN,
                MODULO, EQ }
 
-    # Characters to ignore
+    # Inline characters to ignore
     ignore = ' \t'
+
+    # others ignored patterns
+    ignore_comment = r'\#.*'
+    ignore_newline = r'\n+'
 
     # Regex for tokens
     ID      = r'[a-zA-Z_][a-zA-Z0-9_]*'
