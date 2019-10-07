@@ -8,7 +8,8 @@ class CalcLexer(Lexer):
     """
     # Set tokens names
     tokens = { ID, NUMBER, PLUS, MINUS, TIMES,
-               DIVIDE, ASSIGN, LPAREN, RPAREN }
+               DIVIDE, ASSIGN, LPAREN, RPAREN,
+               MODULO }
 
     # Characters to ignore
     ignore = ' \t'
@@ -23,6 +24,7 @@ class CalcLexer(Lexer):
     ASSIGN  = r'='
     LPAREN  = r'\('
     RPAREN  = r'\)'
+    MODULO  = r'%'
 
 if __name__ == '__main__':
     lexer = CalcLexer()
