@@ -79,6 +79,16 @@ class CalcLexer(Lexer):
 
 if __name__ == '__main__':
     lexer = CalcLexer()
+    data = '''
+# Counting
+x = 0;
+while (x < 10) {
+    print x;
+    x = x + 1;
+}
+'''
+    for token in lexer.tokenize(data):
+        print(token)
 
     while True:
         data = input('>>>')
