@@ -58,7 +58,7 @@ class CalcLexer(Lexer):
     @_(r'\n+')
     def ignore_newline(self, token):
         """Counting line number."""
-        self.lineno += len(t.value)
+        self.lineno += token.value.count('\n')
 
     @_(r'\{')
     def lbrace(self, token):
