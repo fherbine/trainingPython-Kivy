@@ -13,7 +13,7 @@ class CalcLexer(Lexer):
                PRINT }
 
     # Set litterals character
-    literals = { '{', '}' }
+    literals = { '{', '}', ';' }
 
     # Inline characters to ignore
     ignore = ' \t'
