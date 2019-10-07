@@ -9,7 +9,8 @@ class CalcLexer(Lexer):
     # Set tokens names
     tokens = { ID, NUMBER, PLUS, MINUS, TIMES,
                DIVIDE, ASSIGN, LPAREN, RPAREN,
-               MODULO, EQ }
+               MODULO, EQ, IF, ELSE, WHILE,
+               PRINT }
 
     # Inline characters to ignore
     ignore = ' \t'
@@ -19,7 +20,14 @@ class CalcLexer(Lexer):
     ignore_newline = r'\n+'
 
     # Regex for tokens
+    # Identifiers & keywords
     ID      = r'[a-zA-Z_][a-zA-Z0-9_]*'
+    ID['if'] = IF
+    ID['else'] = ELSE
+    ID['while'] = WHILE
+    ID['print'] = PRINT
+
+    # Other Regex
     NUMBER  = r'\d+'
     PLUS    = r'\+'
     MINUS   = r'-'
