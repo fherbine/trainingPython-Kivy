@@ -44,6 +44,12 @@ class CalcLexer(Lexer):
         token.value = int(token.value)
         return token
 
+    @_(r'\n+')
+    def ignore_newline(self, token):
+        """Counting line number."""
+        self.lineno += len(t.value)
+
+
 if __name__ == '__main__':
     lexer = CalcLexer()
 
