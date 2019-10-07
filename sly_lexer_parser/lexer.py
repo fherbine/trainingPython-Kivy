@@ -9,7 +9,7 @@ class CalcLexer(Lexer):
     # Set tokens names
     tokens = { ID, NUMBER, PLUS, MINUS, TIMES,
                DIVIDE, ASSIGN, LPAREN, RPAREN,
-               MODULO }
+               MODULO, EQ }
 
     # Characters to ignore
     ignore = ' \t'
@@ -21,6 +21,7 @@ class CalcLexer(Lexer):
     MINUS   = r'-'
     TIMES   = r'\*'
     DIVIDE  = r'/'
+    EQ      = r'==' # LONGER => MUST APPEARS FIRST !!
     ASSIGN  = r'='
     LPAREN  = r'\('
     RPAREN  = r'\)'
